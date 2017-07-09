@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!-- from https://github.com/salmanarshad2000/demos/blob/v1.0.0/youtube/retrieve-title-description-and-thumbnail.html -->
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>YouTube: Retrieve Title and info for list of videos</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<style>
+		body, textarea {
+			font-family: "Open Sans","Arial";
+		}
+		textarea {
+			font-size: 10pt;
+		}
+	</style>
+</head>
+<body>
+<h2>Youtube video info extractor</h2>
+
+<table width="100%">
+<tr width="100%">
+<td width="40%">
+<h4>Enter YouTube Video URLs in the text box below, one URL per line</h3>
+
+<textarea id="search-txt" type="text" rows="20" cols="50">
+https://www.youtube.com/watch?v=_w1De4KqshI
+</textarea>
+<br><br>
+<input id="search-btn" type="button" value="Fetch Video Information">
+</td><td>
+Output: <br>
+<textarea id="output" rows="25" cols="80"></textarea>
+<script>
+/*
+ * YouTube: Retrieve Title, and other info
+ * Original: http://salman-w.blogspot.com/2010/01/retrieve-youtube-video-title.html,
+ * https://github.com/salmanarshad2000/demos/blob/v1.0.0/youtube/retrieve-title-description-and-thumbnail.html
+ */ 
+		
+//$(function() {
+	$("#search-btn").on("click", function() {
+		document.getElementById('output').value = '';
+		var array1 = document.getElementById('search-txt').value.split('\n');
+		for (i=0; i< array1.length; i++) { // for loop cyling through each line of input text
+			var line = array1[i];
+			var videoid = "";
+			var matches = line.match(/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/i); // from https://stackoverflow.com/a/37704433/4355695
+			if (matches) {
+				videoid = matches[5];
+				//console.log(array1[i] + " : " + matches[5]);
+			}
+			if (videoid.match(/^[a-z0-9_-]{11}$/i) === null) {
+				document.getElementById("output").value += line + " : Unable to parse Video ID/URL.\n\n";
+				continue;
+			}
+			$.getJSON("https://www.googleapis.com/youtube/v3/videos", {
+				key: "AIzaSyB67EeMDNvqQqPqwVM-Jtqt8Pdpq-R9q4I",
+				part: "snippet,statistics",
+				id: videoid
+			}, function(data) {
+				if (data.items.length === 0) {
+					document.getElementById("output").value += line + " : Video not found.\n\n";
+				} else 	{
+				document.getElementById("output").value += "https://www.youtube.com/watch?v=" + data.items[0].id + "\n" + data.items[0].snippet.title + " -" + data.items[0].snippet.channelTitle + ", " + data.items[0].snippet.publishedAt.substr(0,10) + "\n\n" ;
+				}
+				
+				/*
+				other infos, from original script:
+				$("<img>", {
+			src: data.items[0].snippet.thumbnails.medium.url,
+			width: data.items[0].snippet.thumbnails.medium.width,
+			height: data.items[0].snippet.thumbnails.medium.height
+				}).appendTo("#video-data-1");
+				$("<p></p>").text(data.items[0].snippet.description).appendTo("#video-data-1");
+				$("<li></li>").text("Published at: " + data.items[0].snippet.publishedAt).appendTo("#video-data-2");
+				$("<li></li>").text("View count: " + data.items[0].statistics.viewCount).appendTo("#video-data-2");
+				$("<li></li>").text("Favorite count: " + data.items[0].statistics.favoriteCount).appendTo("#video-data-2");
+				$("<li></li>").text("Like count: " + data.items[0].statistics.likeCount).appendTo("#video-data-2");
+				$("<li></li>").text("Dislike count: " + data.items[0].statistics.dislikeCount).appendTo("#video-data-2");
+				*/
+			}).fail(function(jqXHR, textStatus, errorThrown) {
+				document.getElementById("output").value += "Error for id " + videoid + ": " + ( jqXHR.responseText || errorThrown ) + "\n\n";
+			});
+		} //end of for loop cycling through each line
+	});
+//});
+	</script>
+</td></tr></table>
+<br>
+By <a href="http://nikhilvj.cu.cc">Nikhil VJ</a>. Adapted from <a href="http://salman-w.blogspot.com/2010/01/retrieve-youtube-video-title.html">this script by Salman Arshad</a>, to be able to process multiple URLs. Also, got a neat expression-matching regexp from <a href="https://stackoverflow.com/a/37704433/4355695">this Stackoverflow answer</a> that can catch any kind of youtube URL thrown at it :).
+</body>
+</html>
