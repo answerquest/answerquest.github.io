@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html><head>
+  <title>Self-referencing table to Hierarchical JSON converter</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="lib/bootstrap.min.css" orig="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <style>
+	  label { font-weight: normal; }
+  </style>
+</head><body>
+	<header class="text-center">
+<h1>Self-referencing table to Hierarchical JSON converter</h1>
+<h2>
+<div class="col-sm-4"><div class="well well-sm"><i>A tool to convert your data from this...<br><img src="http://i.imgur.com/YCcOcnh.jpg"></div></div>
+<div class="col-sm-4"><div class="well well-sm"><img src="http://i.imgur.com/UtWMKpZ.jpg"><br>...into this </div></div>
+<div class="col-sm-4"><div class="well well-sm">>> so you can do things like this with it !</i><br><img src="http://i.imgur.com/2V401B2m.jpg"></div></div>
+</h2>
+</header>
+
+
+<div class="container">
+<div class="row">
+<div class="col-sm-8">
+<textarea id="source" rows="5" style="width:100%" placeholder="Copy-paste your tabular data in CSV (comma separated values) format here. Open the CSV file in a simple text editor like Notepad and copy-paste from there.      (note: you got Unicode chars in your data? export to CSV using OpenOffice/LibreOffice! Excel can't handle unicode in csv!)"></textarea>
+</div>
+
+<div class="col-sm-4">
+OR give a URL / relative path to your CSV File: <br>
+<input id="url" title="URL path to your CSV file" placeholder="click below for example">
+&nbsp;&nbsp;&nbsp;
+<a type=button class="btn btn-info btn-sm" onclick="CSVload('url','source')">Load CSV</a>
+<br>
+<small><a onclick="$('#url').val('data/sample-parent-child.csv')">sample</a> | 
+<a onclick="$('#url').val('data/puneMCbudget2016-17/pune 2016-17 MC budget simplified.csv')">pune.2016-17.draft.budget</a></small>
+<br>
+<input type=button  class="btn btn-danger btn-sm" value="clear input csv box" onclick="$('#source').val('')">
+<br>
+
+</div></div>
+
+<div class="row">
+<div class="col-sm-4">
+<h3>Main</h3>
+startKey: <input id="startKey" placeholder="default: ROOT" title="where do you want to start from. You can specify a unique id other than the topmost root if you want to only do a sub-tree"><br>
+maxDepth: <input id="maxDepth" value="3" title="This is to limit the size and complexity of your output JSON. Cutoff after which the details of further sub-items will not be printed, but the quantitative values will still be added up. For example, 3 means your JSON will only be upto 3 levels deep, even though the CSV data has items deeper. Thedeeper items' values will be added up to their parent nodes. Set it blank or 0 to cover all levels." placeholder="default: no limits">
+
+</div>
+
+<div class="col-sm-4">
+<h3>Columns</h3>
+keyField: <input id="keyField" title="the unique id column" placeholder="deafult: code"><br>
+parentField: <input id="parentField" title="where the parent item's unique id is written" placeholder="default: parentcode"><br>
+amountField: <input id="amountField" title="column having the main quantitative value that is to be aggregated" placeholder="default: amount"><br>
+nameField: <input id="nameField" title="which column has the main title of each item. Can be same as keyField, or another column having a longer title for example. In output, this value will be stored in 'name' variable" placeholder="default: code">
+
+</div>
+<div class="col-sm-4">
+<h3>Other</h3>
+amountVar: <input id="amountVar" value="value" title="output variable name for the calculated quantity. Some visualization scripts need 'value', some need 'size'" placeholder="default: value"><br>
+<input type="checkbox" id="printAllColumns" checked><label for="printAllColumns">&nbsp;&nbsp;Print all columns</label><br>
+<input type="checkbox" id="extraMeta"><label for="extraMeta">&nbsp;&nbsp;Print metadata</label>
+</div>
+</div>
+
+<br>
+<center>
+<span style="display:inline-block; width:5%;"></span>
+
+<input type=button  class="btn btn-primary btn-lg" value="Create Hierarchical JSON" onclick="buttonlaunch()">
+<span style="display:inline-block; width:5%;"></span>
+
+<input type=button  class="btn btn-danger btn-sm" value="clear" onclick="$('#destination').val('')">
+<br>
+
+<small>Warning: script may take time for large datasets. If browser shows a stop/continue prompt, please press Continue till the work is done.</small><br>
+
+<textarea id="destination" rows="15" style="width:80%" placeholder="output appears here"></textarea>
+</center>
+<br>
+<!-- ########## FOOTER ############ -->
+<div class="row">
+
+<div class="col-sm-4">
+<p>Notes: </p>
+<ul>
+<li>Verify and format your JSON code here: <a href="http://jsonformatter.org/">jsonformatter.org</a></li>
+<li>You can save this page to your computer or download from the github link and run it locally. It works fine on Ubuntu/Firefox, but on windows you might need to run it under a portable server (like UWamp).</li>
+<li>The best way to make this process your data is to export as CSV and copy-paste the contents to the top textbox. You're welcome to try loading the file by URL but no guarantees.</li>
+<li>Warning: If you choose the "Print all columns" option, those columns that have the same title as 'name', or the amountVar(default: 'value'), ( or 'level' or 'subitems'  if you have chosen to print metadata )...<br>
+will be <i>overwritten</i>. So try to name your columns differently.. avoid using 'name', 'value', 'subitems', 'level'.</li>
+<li>Avoid naming your columns as 'parent' or 'children' too as most data-viz scripts use those and your data might get overwritten.</li>
+<li>Just for the record, all data conversion, processing on this page is happening at your end (client-side) only. We can't and don't want to do anything with your data. Save the page to ur comp and run it without internet.</li>
+</div>
+
+<div class="col-sm-4">
+<div class="well">
+<a href="https://gist.github.com/answerquest/e669903672396a6394d7">Get the Code on Github</a><br>
+See some outputs of this wizard in action:<br>
+Pune 2016-17 Budget Visualized : <a href="http://sahbhag.in/files/pune-budget-viz-2.html">interactive pie-chart</a>, and <a href="http://sahbhag.in/files/pune-budget-viz-3.html">interactive list</a>.
+</div>
+<hr>
+<p>Invitation : Help us </p>
+</div>
+
+<div class="col-sm-4">
+<p><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a></p>
+<p>by Nikhil VJ, Pune, India.<br>
+Created during a project with <a href="http://ceeindia.org">Centre for Environment Education, Pune</a><br>
+Using <a href="http://papaparse.com/">Papa Parse</a>, <a href="https://jquery.com/">jQuery</a>, <a href="http://www.w3schools.com/bootstrap">Bootstrap</a> and a ton of snippets from <a href="http://stackoverflow.com">Stack Overflow</a> network.<br>
+Send feedback on nikhil.js [at] gmail [dot] com.</p>
+</div>
+
+</div>
+
+<hr>
+</div>
+
+<script src="lib/jquery-2.1.3.min.js" orig="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="lib/papaparse.min.js"></script><!-- from http://papaparse.com -->
+<script src="lib/selfrefCSV_2_hierarchJSON.js"></script>
+<script>
+
+function buttonlaunch() {
+	
+	if( ! $('#source').val() )  {
+		$('#destination').val('Please load the input CSV data first. If you have given a URL, press the "Load CSV" button.');
+		return;
+	}
+	else $('#destination').val('Processing.. please wait..');
+	var results = Papa.parse( $('#source').val(), {
+		header: true,
+		dynamicTyping: true
+	});
+	//$('#destination').val(JSON.stringify(results, null, 2));
+	
+	
+	selfrefCSV_2_hierarchJSON( results, {
+		type: 'string',
+		destination: 'destination',
+		keyField: $('#keyField').val(),
+		parentField: $('#parentField').val(),
+		amountField: $('#amountField').val(),
+		nameField: $('#nameField').val(),
+		amountVar: $('#amountVar').val(),
+		startKey: $('#startKey').val(), 
+		maxDepth: parseInt($('#maxDepth').val()),
+		printAllColumns: $("#printAllColumns").is(":checked"),
+		extraMeta: $("#extraMeta").is(":checked")
+	});
+	
+}
+
+function CSVpreview() {
+	if ( ! $('#url').val() ) {
+		console.log("Where's the CSV data file??");
+		destination.value = "Where's the CSV data file??";
+		destination.focus();
+		return;
+	}
+	$('#destination').val('loading, please wait...');
+
+	Papa.parse($('#url').val(), {
+		download: true,
+		header: true,
+		dynamicTyping: true,
+		error: function(results) {
+			console.log('Error: Invalid CSV file : "'+ $('#url').val() +'". Give me something real, please.');
+			$('#destination').val('Error: Invalid CSV file : "'+ $('#url').val() +'". Give me something real, please.');
+			$('#destination').focus();
+			return;
+		},
+		complete: function(results) {
+			var csv = Papa.unparse(results.data.slice(0,10));
+			var columns = Object.keys(results.data[0]).length;
+			var rows = results.data.length ;
+			
+			$('#destination').val('File: ' + $('#url').val() + '\n' + 'Number of columns: ' + columns + '\nNumber of rows: ' + rows + '\nShowing first 10 lines:\n##############\n' + csv);
+		}
+	});
+}
+
+function CSVload(url, source) {
+	if ( ! $('#'+url).val() ) {
+		console.log("Where's the CSV data file??");
+		destination.value = "Where's the CSV data file??";
+		destination.focus();
+		return;
+	}
+	$('#'+source).val('loading, please wait...');
+
+	Papa.parse($('#'+url).val(), {
+		download: true,
+		header: true,
+		dynamicTyping: true,
+		error: function(results) {
+			console.log('Error: Invalid CSV file : "'+ $('#'+url).val() +'". Give me something real, please.');
+			$('#'+source).val('Error: Invalid CSV file : "'+ $('#'+url).val() +'". Give me something real, please.');
+			$('#'+source).focus();
+			return;
+		},
+		complete: function(results) {
+			var csv = Papa.unparse(results.data);
+			var columns = Object.keys(results.data[0]).length; //way to find number of variables in a JSON array.
+			var rows = results.data.length ;
+			
+			$('#'+source).val(csv);
+			
+			//$('#'+source).val('File: ' + $('#'+url).val() + '\n' + 'Number of columns: ' + columns + '\nNumber of rows: ' + rows + '\nShowing first 10 lines:\n##############\n' + csv);
+		}
+	});
+
+}
+</script>
+
+<!-- Disqus comments -->
+<hr>
+<div id="disqus_thread" class="container"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//ourpuneourbudget.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</body></html>
