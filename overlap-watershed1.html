@@ -116,7 +116,7 @@ var tileSource = '';
 
 var funcLayer = new L.TileLayer.Functional(function (view) {
     //var url = 'http://mapwarper.net/maps/tile/{i}/{0}/{1}/{2}.png'
-    var url = 'http://{s}.tiles.mapbox.com/v4/{i}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY2VlcHVuZSIsImEiOiJjajZ0OXNpMW0wYzh2MnFycDR5bGdwbTN3In0.z5P1lIR3V_QUmCq44-0tZg'
+    var url = 'https://{s}.tiles.mapbox.com/v4/{i}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY2VlcHVuZSIsImEiOiJjajZ0OXNpMW0wYzh2MnFycDR5bGdwbTN3In0.z5P1lIR3V_QUmCq44-0tZg'
         .replace('{z}', view.zoom)
         .replace('{y}', view.tile.row)
         .replace('{x}', view.tile.column)
