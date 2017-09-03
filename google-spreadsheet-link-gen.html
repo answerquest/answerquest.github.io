@@ -1,0 +1,36 @@
+<html>
+<head>
+<style>
+body {
+	font-family: Arial;
+}
+</style>
+</head>
+<body>
+<h2>Google spreadsheet download links etc generator</h2>
+
+<p>Enter Key</p>
+<input id="key" size=100>
+
+<p><small>Example: bolded part of URL:<br>https://docs.google.com/spreadsheets/d/<b>1vmZEOjpGFql9twcWZTLKyn98ztmqHe3B4yUE6ylPREg</b>/edit#gid=724139371</small></p>
+
+<p><input type=button onclick="linkgen(document.getElementById('key').value)" value="Generate"></p>
+
+<p>.ODS file download link:</p>
+<input id="output" size=100>
+
+<br>
+<p>download command (for linux terminal)</p>
+
+<textarea id="outscript" rows=4 cols=60></textarea>
+
+<script>
+function linkgen(key) {
+	document.getElementById('output').value = 'https://docs.google.com/spreadsheets/d/' + key + '/export?format=ods&id=' + key ;
+	document.getElementById('outscript').innerHTML = 'wget -O spreadsheet.ods ' + document.getElementById('output').value;
+	
+}
+
+</script>
+</body>
+</html>
