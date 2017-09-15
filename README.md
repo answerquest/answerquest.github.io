@@ -1,5 +1,5 @@
 # answerquest.github.io
-Repo for programs, apps
+Repo for programs, apps. [See the repo](https://github.com/answerquest/answerquest.github.io).
 
 [Overlap](overlap.html) : Image maps like Development Plan fading in and out over zoomable web map with satellite view.
 
