@@ -5,6 +5,10 @@
 <meta charset="utf-8" />
 <link rel="stylesheet" href="lib/leaflet.css" /> <!-- original: http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css -->
 <style>
+body {
+	font-family: Arial;
+}
+
 html, body, #container, #map {
     padding: 0;
     margin: 10;
@@ -24,15 +28,19 @@ html, body, #container, #map {
 <div id="map"></div>
 </td><td>
     <form>
+   Click a point on the map to fill the lat-long, or enter your own lat-long values and <a href="#" onClick="updateLatLng(document.getElementById('latitude').value,document.getElementById('longitude').value,1)">jump there</a>
+	    :: <a href="#" onclick="map.zoomOut(3, {animate:true})">zoom out</a> :: 
+	    :: <a href="#" onclick="map.zoomIn(3, {animate:true})">zoom in</a>
+	  
+	  <br><br><br>
+
       <label for="schoolname">School Name:</label><input id="schoolname" type="text" /><br>
       <label for="description">Description:</label><input id="description" type="text" /><br>
       <label for="latitude">Latitude:</label>
       <input id="latitude" type="text" />
       <label for="longitude">Longitude:</label>
       <input id="longitude" type="text" />
-	   <br>or, enter your own lat-long values and <input type="button" value="Jump there" onClick="updateLatLng(document.getElementById('latitude').value,document.getElementById('longitude').value,1)">
-	    :: <a href="#" onclick="map.zoomOut(3, {animate:true})">zoom out</a> :: 
-	    :: <a href="#" onclick="map.zoomIn(3, {animate:true})">zoom in</a>
+	  <br><input type="button" value="Push to mapbox!">
     </form>
 </td></tr></table>
 <script src="lib/leaflet.js"></script> <!-- Orginal: http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js -->
