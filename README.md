@@ -6,3 +6,5 @@ Repo for programs, apps. [See the repo](https://github.com/answerquest/answerque
 [Youtube video info extractor](youtube-info-extractor.html)
 
 [Self-referencing CSV to Hierarchical JSON converter](selfrefCSV_2_hierarchJSON.html) : for visualizing tabular data that has nested hierarhcies with rows having parent-child configurations.
+
+[Synchronized Maps : Pune Prabhags](pune_07-12-17_sync.html) Side-by-side comparison of maps from pre-2012, 2012-17, and 2017-onwards
