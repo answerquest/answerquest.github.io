@@ -80,24 +80,56 @@ var layerControl = L.control.layers({ },{ }, {collapsed: false}).addTo(map);
 var  layerControlA = L.control.layers({ }, { }, {collapsed: false}).addTo(mapA); 
 var  layerControlB = L.control.layers({ }, { }, {collapsed: false}).addTo(mapB); 
 
+
 // Loading ward layers on the three maps
 var wards = L.geoJson(null, { 
-	style: {weight: 1.5, opacity: 1, color: 'green', dashArray: '0', fillOpacity: 0.0 }
+	style: {weight: 1.5, opacity: 1, color: 'green', dashArray: '0', fillOpacity: 0.0 },
+	onEachFeature: onEachFeature
 }).addTo(map);
 omnivore.geojson(DATAPATH+'pune2017_22_wards_corporators.geojson', null, wards);
 layerControl.addOverlay(wards , "2017 Prabhags (41)");
 
+
 var wardsA = L.geoJson(null, { 
-	style: {weight: 1.5, opacity: 1, color: 'blue', dashArray: '0', fillOpacity: 0.0 }
+	style: {weight: 1.5, opacity: 1, color: 'blue', dashArray: '0', fillOpacity: 0.0 },
+	onEachFeature: onEachFeatureA
 }).addTo(mapA);
 omnivore.geojson(DATAPATH+'pune-2012-17-prabhags.geojson', null, wardsA);
 layerControlA.addOverlay(wardsA , "2012-17 Prabhags (76)");
 
 var wardsB = L.geoJson(null, { 
-	style: {weight: 1.5, opacity: 1, color: '#d55d5d', dashArray: '0', fillOpacity: 0.0 }
+	style: {weight: 1.5, opacity: 1, color: '#d55d5d', dashArray: '0', fillOpacity: 0.0 },
+	onEachFeature: onEachFeatureB
 }).addTo(mapB);
 omnivore.geojson(DATAPATH+'pune pre-2012 144prabhags.geojson', null, wardsB);
 layerControlB.addOverlay(wardsB , "2007-12 Prabhags (144)");
+
+function onEachFeature(feature, layer) {
+	var popupText = feature.properties['prabhag_number'].toString() + ": " + feature.properties['prabhag_name'];
+	layer.bindTooltip(popupText, 
+		{ sticky: true }) // to follow the mouse
+		.addTo(map);
+	// https://gis.stackexchange.com/a/245183/44746
+	// .toString() has to be added when taking only a numerical feature.properties.var as tooltip text, from https://gis.stackexchange.com/questions/241739/removing-tooltip-label-border-completely-in-leaflet-js-map	
+}
+
+function onEachFeatureA(feature, layer) {
+	var popupText = feature.properties['wardnum'].toString() + ": " + feature.properties['title'];
+	layer.bindTooltip(popupText, 
+		{ sticky: true }) // to follow the mouse
+		.addTo(mapA);
+	// https://gis.stackexchange.com/a/245183/44746
+	// .toString() has to be added when taking only a numerical feature.properties.var as tooltip text, from https://gis.stackexchange.com/questions/241739/removing-tooltip-label-border-completely-in-leaflet-js-map	
+}
+
+function onEachFeatureB(feature, layer) {
+	var popupText = feature.properties['wardnum'].toString();
+	layer.bindTooltip(popupText, 
+		{ sticky: true }) // to follow the mouse
+		.addTo(mapB);
+	// https://gis.stackexchange.com/a/245183/44746
+	// .toString() has to be added when taking only a numerical feature.properties.var as tooltip text, from https://gis.stackexchange.com/questions/241739/removing-tooltip-label-border-completely-in-leaflet-js-map	
+}
 
 </script>
 </body>
