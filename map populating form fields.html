@@ -40,7 +40,9 @@ html, body, #container, #map {
       <input id="latitude" type="text" />
       <label for="longitude">Longitude:</label>
       <input id="longitude" type="text" />
-	  <br><input type="button" value="Push to mapbox!">
+	  <br><input type="button" value="Create GeoJSON string" onclick="makeGeoJSON()">
+	  <br><textarea id="output" rows=10 cols=50></textarea>
+	  <br><input type="button" value="Push to mapbox! (not yet...)">
     </form>
 </td></tr></table>
 <script src="lib/leaflet.js"></script> <!-- Orginal: http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js -->
@@ -85,6 +87,25 @@ function updateLatLng(lat,lng,reverse) {
 	document.getElementById('longitude').value = marker.getLatLng().lng;
 	map.panTo([lat,lng]);
 	}
+}
+
+function makeGeoJSON() {
+	var schoolname = document.getElementById('schoolname').value;
+	var description = document.getElementById('description').value;
+	var latitude = parseFloat(document.getElementById('latitude').value);
+	var longitude = parseFloat(document.getElementById('longitude').value);
+	var feature = {
+		"type": "Feature",
+		"properties": {
+			"schoolname": schoolname,
+			"description": description
+		},
+		"geometry": {
+			"type": "Point",
+			"coordinates": [longitude,latitude]
+		}
+	};
+	document.getElementById('output').value = JSON.stringify(feature, null, 2);
 }
 
 </script>
