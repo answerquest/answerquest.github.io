@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Pune prabhag (electoral ward) maps : 2007, 2012, 2017</title>
+<title>Pune prabhag (electoral ward) maps : Pre-2012, 2012-17, 2017 onwards</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet-src.js"></script>
 <script src="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js" alt='lib/leaflet-omnivore.min.js'></script>
@@ -33,10 +33,11 @@ html, body { width: 100%; height: 100%; margin: 10; font-family: Arial }
 .ribbon {
    position: absolute;
    right: -5px; top: -5px;
-   z-index: 1;
+   z-index: 1000;
    overflow: hidden;
    width: 80px; height: 80px; 
    text-align: right;
+   position: fixed;
 }
 .ribbon span {
    font-size: 10px;
@@ -71,9 +72,9 @@ html, body { width: 100%; height: 100%; margin: 10; font-family: Arial }
 </div>
 
 <br>&nbsp;<br>
-<p>Instructions: Click/touch and drag to move the map around. Use the zoom control on top left or +/- keys to zoom in or out. All three maps will move together. The circles tell which area the mouse is currently hovering on.</p>
+<p>Instructions: Click/touch and drag to move the map around. Use the zoom control on top left or +/- keys to zoom in or out. All three maps will move together, and mouse cursor position will be copied.</p>
 <p>Click on links to download the shape files.: Green : <a href="maps/pune.2017.wards.geojson">2017-present</a> (41 prahags) | Blue: <a href="maps/pune.2012-17.wards.geojson">2012-17</a> (76 prabhags) | Red: <a href="maps/pune.pre-2012.wards.geojson:">Pre-2012</a> (144 Prabhags). <br>The 2011 Census data for Pune is as per the pre-2012 144 prabhags.</p>
-<p>Map prepared by Nikhil VJ, Pune. Contact : nikhil.js [at] gmail.com. 
+<p>Map prepared by <a href="https://answerquest.github.io">Nikhil VJ</a>, <a href="https://datameet-pune.github.io">DataMeet Pune Chapter</a>, India. Contact : nikhil.js [at] gmail.com. 
 
 <p><a href="https://www.instamojo.com/@nikhilvj/">Please contribute</a> if you appreciate this work and would like to see more of it!</p>
 
@@ -149,7 +150,7 @@ var wards = L.geoJson(null, {
 	onEachFeature: onEachFeature
 }).addTo(map);
 omnivore.geojson(DATAPATH+'pune.2017.wards.geojson', null, wards);
-layerControl.addOverlay(wards , "2017 Prabhags (41)");
+layerControl.addOverlay(wards , "2017 onwards (41)");
 
 
 var wardsA = L.geoJson(null, { 
@@ -157,14 +158,14 @@ var wardsA = L.geoJson(null, {
 	onEachFeature: onEachFeatureA
 }).addTo(mapA);
 omnivore.geojson(DATAPATH+'pune.2012-17.wards.geojson', null, wardsA);
-layerControlA.addOverlay(wardsA , "2012-17 Prabhags (76)");
+layerControlA.addOverlay(wardsA , "2012-17 (76)");
 
 var wardsB = L.geoJson(null, { 
 	style: {weight: 1.5, opacity: 1, color: '#d55d5d', dashArray: '0', fillOpacity: 0.0 },
 	onEachFeature: onEachFeatureB
 }).addTo(mapB);
 omnivore.geojson(DATAPATH+'pune.pre-2012.wards.geojson', null, wardsB);
-layerControlB.addOverlay(wardsB , "pre-2012 Prabhags (144)");
+layerControlB.addOverlay(wardsB , "pre-2012 (144)");
 
 function onEachFeature(feature, layer) {
 	var popupText = '<big><b>' + feature.properties['prabhag_number'].toString() + "</b>: " + feature.properties['prabhag_name'] + 
