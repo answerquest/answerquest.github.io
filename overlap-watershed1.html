@@ -20,7 +20,7 @@
         
         #map {
             width: 100%;
-            height: 95%; 
+            height: 90%; 
         }
        
      </style>
@@ -30,10 +30,17 @@
 <input type="button" value="previous" onClick="nextTiles(-1)">
  <select id="overlaySelector" onChange="changeTiles()">
 <optgroup label="Ramnadi">
-	<option value="ceepune.8kufcj37">Bhugaon village GSDA map</option>
 	<option value="ceepune.2cbrhf3o" selected>Ramnadi_Watershed_Geology</option>
 	<option value="ceepune.69jc044r">Ramnadi Elevation</option>
 	<option value="ceepune.71xuy1oo">Ramnadi Drainage</option>
+	<option value="ceepune.6x1shput">Baner village GSDA map</option>
+	<option value="ceepune.6gk2rfee">Pashan village GSDA map</option>
+	<option value="ceepune.8drk1w2m">Sunarwadi village GSDA map</option>
+	<option value="ceepune.3v9zqnwi">Bavdhan Bk village GSDA map</option>
+	<option value="ceepune.8h4ovayf">Bavdhan Kh village GSDA map</option>
+	<option value="ceepune.8kufcj37">Bhugaon village GSDA map</option>
+	<option value="ceepune.3ougo361">Bhukum village GSDA map</option>
+	
 </optgroup>
 </select>
 <input type="button" value="next" onClick="nextTiles(1)">
@@ -41,9 +48,8 @@
 </div>
 <div id="map"></div>
 
-    <script src="lib/leaflet.js"></script>-->
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script> -->
-    <script src="lib/Control.Opacity.js"></script>
+    <script src="lib/leaflet.js"></script>
+	<script src="lib/Control.Opacity.js"></script>
     <script src="lib/jquery-1.9.1.js"></script>
 	<script src="lib/jquery-ui-1.10.3.custom.min.js"></script>
 
@@ -53,7 +59,7 @@
 
 
 <script type="text/JavaScript">
-var DATAPATH = "data/";
+var DATAPATH = "maps/";
 
 var osmLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>',
 	mapboxUrl = 'https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png',
@@ -75,6 +81,7 @@ var MBstreets = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mlpl2d', attribution:
 	MBwheatpaste = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mnld61', attribution: MBAttrib}),
 	MBcomic = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mo16hg', attribution: MBAttrib}),
 	MBoutdoors = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlraGlsc2hldGgiLCJhIjoiQTREVlJuOCJ9.YpMpVVbkxOFZW-bEq1_LIw", {attribution: MBAttrib}),
+	MBscenic = L.tileLayer("https://api.mapbox.com/styles/v1/nikhilsheth/cj8rdd7wu45nl2sps9teusbbr/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlraGlsc2hldGgiLCJhIjoiQTREVlJuOCJ9.YpMpVVbkxOFZW-bEq1_LIw", {attribution: MBAttrib}),
 	
 	OsmIndia = L.tileLayer(mapboxUrl, {id: 'openstreetmap.1b68f018', attribution: MBAttrib, maxZoom: 20}),
 	osmMap = L.tileLayer(osmUrl, {attribution: osmAttrib, maxZoom: 20});
@@ -86,6 +93,7 @@ var MBstreets = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mlpl2d', attribution:
 //	var googleLayer = new L.Google('ROADMAP'); // google maps layer initiation
 	
 	var baseLayers = {
+	"Mapbox Scenic": MBscenic,
 	"Mapbox Outdoors": MBoutdoors,
 	"Mapbox Satellite w/labels": MBsatlabel ,
 	"OpenStreetMap.IN": OsmIndia,
@@ -98,7 +106,7 @@ var MBstreets = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mlpl2d', attribution:
 
 
 var map = L.map('map', {
-    layers: [MBoutdoors],
+    layers: [MBscenic],
     fullscreenControl: true,
 	fullscreenControlOptions: {
 		position: 'topleft'
@@ -139,17 +147,35 @@ function changeTiles() {
 
 changeTiles();
 
-/*
+
 //###############################
 // Adding other layers
-var wards = L.geoJson(null, { 
-	//onEachFeature: function (feature, layer) { defaultOnEachFeature(feature, layer, title, fields); }, 
-	style: {weight: 2, opacity: 1, color: 'orange', dashArray: '4', fillOpacity: 0, 
-	fillColor: "yellow" } 
-	}).addTo(map);
-omnivore.geojson(DATAPATH+'pune-electoral-wards-boundaries.geojson', null, wards);
-layerControl.addOverlay(wards , "Electoral Ward Boundaries");
 
+var wards = L.geoJson(null, { 
+	style: {weight: 2, opacity: 1, color: 'orange', dashArray: '4', fillOpacity: 0, fillColor: "yellow" },
+	onEachFeature: onEachFeature
+	});
+omnivore.geojson(DATAPATH+'pune.2017.wards.geojson', null, wards);
+layerControl.addOverlay(wards , "2017-onwards Pune prabhags");
+
+// Loading three talukas overlapping the area
+var talukas = L.geoJson(null, { 
+	style: {weight: 1, opacity: 1, color: 'blue', dashArray: '6', fillOpacity: 0.0 },
+	onEachFeature: onEachFeature
+});
+omnivore.geojson(DATAPATH+'punecity.haveli.mulshi.geojson', null, talukas);
+layerControl.addOverlay(talukas , "talukas punecity,haveli,mulshi");
+
+function onEachFeature(feature, layer) {
+	// show all properties on clicking. From https://stackoverflow.com/a/33839514/4355695
+	var popupcontent = [];
+    for (var prop in feature.properties) {
+        popupcontent.push(prop + ": " + feature.properties[prop]);
+    }
+    layer.bindPopup(popupcontent.join("<br />"));
+}
+
+/*
 var adminlayer = L.geoJson(null, { 
 	//onEachFeature: function (feature, layer) { defaultOnEachFeature(feature, layer, title, fields); }, 
 	style: {weight: 2, opacity: 1, color: 'purple', dashArray: '4', fillOpacity: 0, 

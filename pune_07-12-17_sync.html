@@ -174,15 +174,50 @@ function onEachFeature(feature, layer) {
 	layer.bindTooltip(popupText, 
 		{ sticky: true }) // to follow the mouse
 		.addTo(map);
+	
+	// show all properties on clicking. From https://stackoverflow.com/a/33839514/4355695
+    var popupcontent = [];
+    for (var prop in feature.properties) {
+        popupcontent.push(prop + ": " + feature.properties[prop]);
+    }
+    
+    popupcontent.push('<a href="javascript:map.fitBounds('+bounds2string(layer.getBounds())+');">click here to zoom in</a>');
+    layer.bindPopup(popupcontent.join("<br />"));
+ 
+ /*   
+    // mouse interactivity, from http://leafletjs.com/examples/choropleth/
+    layer.on({
+        click: function zoomToFeature(e) {
+			map.fitBounds(e.target.getBounds());
+		}
+    });
+*/
+
 }
 	// tooltip syntax: https://gis.stackexchange.com/a/245183/44746
 	// .toString() has to be added when taking only a numerical feature.properties.var as tooltip text, from
+
+function bounds2string(zObj) {
+	return '[ [ ' + zObj._southWest.lat +','+ zObj._southWest.lng +'] , [ '+ zObj._northEast.lat +',' +  zObj._northEast.lng + ' ] ]';
+}
+
+
 
 function onEachFeatureA(feature, layer) {
 	var popupText = '<big><b>' + feature.properties['wardnum'].toString() + "</b>: " + feature.properties['title'] + '</big>';
 	layer.bindTooltip(popupText, 
 		{ sticky: true }) // to follow the mouse
 		.addTo(mapA);
+
+    var popupcontent = [];
+    for (var prop in feature.properties) {
+        popupcontent.push(prop + ": " + feature.properties[prop]);
+    }
+    
+    popupcontent.push('<a href="javascript:mapA.fitBounds('+bounds2string(layer.getBounds())+');">click here to zoom in</a>');
+
+    layer.bindPopup(popupcontent.join("<br />"));
+
 }
 
 function onEachFeatureB(feature, layer) {
@@ -190,7 +225,19 @@ function onEachFeatureB(feature, layer) {
 	layer.bindTooltip(popupText, 
 		{ sticky: true }) // to follow the mouse
 		.addTo(mapB);
+
+    var popupcontent = [];
+    for (var prop in feature.properties) {
+        popupcontent.push(prop + ": " + feature.properties[prop]);
+    }
+    
+    popupcontent.push('<a href="javascript:mapB.fitBounds('+bounds2string(layer.getBounds())+');">click here to zoom in</a>');
+
+    layer.bindPopup(popupcontent.join("<br />"));
+
+
 }
+
 
 </script>
 </body>
