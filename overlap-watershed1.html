@@ -44,7 +44,7 @@
 </optgroup>
 </select>
 <input type="button" value="next" onClick="nextTiles(1)">
-<div style="display:inline-block" id="overlayInfo">Hello</div>
+<div style="display:inline-block" id="overlayInfo"></div>
 </div>
 <div id="map"></div>
 
@@ -142,7 +142,7 @@ function changeTiles() {
 	tileSource = id;
 	funcLayer.redraw();
 	console.log("Changed tile source to " + tileSource );
-	document.getElementById('overlayInfo').innerHTML = '<a href="https://www.mapbox.com/studio/tilesets/'+tileSource + '/">' + tileSource + '</a>';
+	//document.getElementById('overlayInfo').innerHTML = '<a href="https://www.mapbox.com/studio/tilesets/'+tileSource + '/">' + tileSource + '</a>';
 }
 
 changeTiles();
