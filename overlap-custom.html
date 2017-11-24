@@ -50,7 +50,7 @@ var osmLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>',
     osmAttrib = '&copy; ' + osmLink + ' Contributors';
 	PMCAttrib = '<a href="http://www.punecorporation.org/">Pune Municipal Corporation</a>',
 	
-	cycleOverlay = '<br>Load overlay: <input id="customOverlay" size=40 value="' + defaultOverlay + '"> | <button onclick="changeTiles()">Update</button>';
+	cycleOverlay = '| <a href="#" onclick="showInstructions()">Instructions</a> | <a href="https://github.com/answerquest/answerquest.github.io/blob/master/overlap-custom.html">See the code</a> <br>Load overlay: <input id="customOverlay" size=40 value="' + defaultOverlay + '"> | <button onclick="changeTiles()">Update</button>';
 
 MBAttrib += cycleOverlay;
 osmAttrib += cycleOverlay;
@@ -69,7 +69,9 @@ var MBstreets = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mlpl2d', attribution:
 	MBcomic = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mo16hg', attribution: MBAttrib}),
 	
 	OsmIndia = L.tileLayer(mapboxUrl, {id: 'openstreetmap.1b68f018', attribution: MBAttrib, maxZoom: 20}),
-	osmMap = L.tileLayer(osmUrl, {attribution: osmAttrib, maxZoom: 20});
+	osmMap = L.tileLayer(osmUrl, {attribution: osmAttrib, maxZoom: 20}),
+	
+	GithubLight = L.tileLayer('http://{s}.tiles.mapbox.com/v3/github.map-xgq2svrz/{z}/{x}/{y}.png', {attribution: MBAttrib});
 	
 	
 //var	PMCwards = L.tileLayer('http://mapwarper.net/maps/tile/9881/{z}/{x}/{y}.png', {attribution: PMCAttrib});
@@ -83,6 +85,7 @@ var MBstreets = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mlpl2d', attribution:
 	"Mapbox Streets": MBstreets,
 	"Mapbox Satellite w/labels": MBsatlabel ,
 	"Mapbox Light": MBlight,
+	"Github Light" : GithubLight,
 	"Mapbox Dark" : MBdark
 //	"Google Maps": googleLayer
 };
@@ -249,7 +252,9 @@ document.getElementById("customOverlay").value = firstTiles;
 changeTiles();
 }
 
-
+function showInstructions() {
+	window.alert("Load your own tileset, like [Mumbai slums data](http://mapwarper.net/maps/25733#Export_tab) for example. Put any `../{z}/{x}/{y}..` type tiles URL at bottom and press Update. Explore <http://mapwarper.net> for many such rasters. \nMapbox tilesets can also be used: URL schema:\n <https://a.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={acesstoken}>\nReplace {id} with your tileset's map id and use your mapbox account's accessToken.\nYou can also directly load the tileset via `?url=` parameter in the URL, [see example](https://answerquest.github.io/overlap-custom.html?url=http://mapwarper.net/maps/tile/25733/{z}/{x}/{y}.png).");
+}
 </script>
 </body>
 </html>
