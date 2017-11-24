@@ -17,9 +17,9 @@ Repo for programs, apps. [See the repo](https://github.com/answerquest/answerque
 
 [Overlap](overlap.html) : Load image/raster maps like Development Plan, fading in and out over zoomable web map with satellite view and other map views.
 
-[Overlap-custom](overlap-custom.html) : Overlay your own raster or georeferenced map. <br>Put any tiles URL schema like '../{z}/{x}/{y}..' at bottom and press Update. 
+[Overlap-custom](overlap-custom.html) : Overlay your own raster or georeferenced map. <br>Put any tiles URL schema like `../{z}/{x}/{y}..` at bottom and press Update. 
 <br>Explore <http://mapwarper.net> for many such rasters. 
 <br>Mapbox tilesets can also be used, look up its URL schema online.
-<br>You can also directly load the tileset by putting '?url={URL}' at the end, 
-<br>or '?mapwarper={id}' for Mapwarper maps, 
-<br>or 'mapbox={id}&accesstoken={accesstoken}' for Mapbox tilesets. (If you have geo-referenced your map using QGIS and have the GeoTIFF file on your computer, you can upload it to Mapbox Studio under Tilesets. Upload it there, then use this tool to make it shareable on the web.)
+<br>You can also directly load the tileset by putting `?url={URL}` at the end, 
+<br>or `?mapwarper={id}` for Mapwarper maps, 
+<br>or `mapbox={id}&accesstoken={accesstoken}` for Mapbox tilesets. (If you have geo-referenced your map using QGIS and have the GeoTIFF file on your computer, you can upload it to Mapbox Studio under Tilesets. Upload it there, then use this tool to make it shareable on the web.)
