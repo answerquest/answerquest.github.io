@@ -1,0 +1,255 @@
+<html>
+<head>
+<meta charset="utf-8" />
+    <title>Custom map overlays like rasters and georeferenced images</title>
+    
+    <link rel="stylesheet" href="lib/leaflet.css" />
+    
+    <link rel="stylesheet" href="lib/Control.Opacity.css" />
+    <link rel="stylesheet" href="lib/jquery-ui-1.10.3.custom.min.css" />
+    
+<link rel="stylesheet" href="lib/Control.FullScreen.css" />
+    
+    <style type="text/css">
+        body, html {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+			font-family: Sans-serif;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%; 
+        }
+       
+     </style>
+</head>
+<body>
+<div id="map"></div>
+
+    <!-- <script src="lib/leaflet.js"></script>-->
+	<script src="lib/leaflet.js" backup="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+    <script src="lib/Control.Opacity.js"></script>
+    <script src="lib/jquery-1.9.1.js"></script>
+	<script src="lib/jquery-ui-1.10.3.custom.min.js"></script>
+
+	<script src='lib/leaflet-omnivore.min.js'></script>
+    <script src="lib/leaflet.functionaltilelayer.js"></script>
+    <script src="lib/Control.FullScreen.js"></script> <!-- From https://github.com/brunob/leaflet.fullscreen -->
+
+
+<script type="text/JavaScript">
+var DATAPATH = "data/";
+var defaultOverlay = "http://mapwarper.net/maps/tile/15155/{z}/{x}/{y}.png";
+
+var osmLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>',
+	mapboxUrl = 'https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png',
+	MBAttrib = '&copy; ' + osmLink + ' Contributors & <a href="https://www.mapbox.com/about/maps/">Mapbox</a>',
+	osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    osmAttrib = '&copy; ' + osmLink + ' Contributors';
+	PMCAttrib = '<a href="http://www.punecorporation.org/">Pune Municipal Corporation</a>',
+	
+	cycleOverlay = '<br>Load overlay: <input id="customOverlay" size=40 value="' + defaultOverlay + '"> | <button onclick="changeTiles()">Update</button>';
+
+MBAttrib += cycleOverlay;
+osmAttrib += cycleOverlay;
+
+var MBstreets = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mlpl2d', attribution: MBAttrib, maxZoom: 20}),
+	MBsatlabel = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mmaa87', attribution: MBAttrib}),
+	MBsat = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mni8e7', attribution: MBAttrib}),
+	MBemerald = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mmebk6', attribution: MBAttrib}),
+	MBrun = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mmicn2', attribution: MBAttrib}),
+	MBlight = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mmobne', attribution: MBAttrib}),
+	MBbw = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mn13df', attribution: MBAttrib}),
+	MBdark = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.jme9hi44', attribution: MBAttrib}),
+	MBpencil = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mn5lf5', attribution: MBAttrib}),
+	MBpirates = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mn8b72', attribution: MBAttrib}),
+	MBwheatpaste = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mnld61', attribution: MBAttrib}),
+	MBcomic = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mo16hg', attribution: MBAttrib}),
+	
+	OsmIndia = L.tileLayer(mapboxUrl, {id: 'openstreetmap.1b68f018', attribution: MBAttrib, maxZoom: 20}),
+	osmMap = L.tileLayer(osmUrl, {attribution: osmAttrib, maxZoom: 20});
+	
+	
+//var	PMCwards = L.tileLayer('http://mapwarper.net/maps/tile/9881/{z}/{x}/{y}.png', {attribution: PMCAttrib});
+
+
+//	var googleLayer = new L.Google('ROADMAP'); // google maps layer initiation
+	
+	var baseLayers = {
+	"OpenStreetMap.IN": OsmIndia,
+	"OpenStreetMap": osmMap,
+	"Mapbox Streets": MBstreets,
+	"Mapbox Satellite w/labels": MBsatlabel ,
+	"Mapbox Light": MBlight,
+	"Mapbox Dark" : MBdark
+//	"Google Maps": googleLayer
+};
+
+
+var map = L.map('map', {
+    layers: [MBdark],
+    zoomControl: false,
+    fullscreenControl: true,
+	fullscreenControlOptions: {
+		position: 'topleft'
+	},
+	minZoom: 6, maxZoom: 20
+})
+.setView([19.1763, 76.10229], 7);
+
+var overlays = { };
+var layerControl = L.control.layers(baseLayers, overlays, {collapsed: true}).addTo(map); 
+map.addControl(L.control.zoom({position:'topleft'}));
+// ###################################################################
+// CUSTOM TILES SOURCE
+var tileSource = '';
+
+var funcLayer = new L.TileLayer.Functional(function (view) {
+		var url = document.getElementById('customOverlay').value
+			//example: http://mapwarper.net/maps/tile/15155/{z}/{x}/{y}.png
+			.replace('{z}', view.zoom)
+			.replace('{y}', view.tile.row)
+			.replace('{x}', view.tile.column)
+			.replace('{3}', view.subdomain);
+			//.replace('{i}', tileSource);
+		return url;
+	},
+	{ maxZoom: 20 }
+);
+layerControl.addOverlay(funcLayer , "Overlay Layer");
+
+function changeTiles() {
+	funcLayer.redraw();
+//	document.getElementById("overlayInfo").innerHTML = '<small>See on <a href="http://mapwarper.net/maps/' + id + '#Preview_Map_tab" target="_blank">http://mapwarper.net/maps/' + id + '#Preview_Map_tab</a></small>';
+	//console.log("Changed tile source to " + tileSource );
+}
+
+changeTiles();
+
+/*
+//###############################
+// Adding other layers
+var wards = L.geoJson(null, { 
+	//onEachFeature: function (feature, layer) { defaultOnEachFeature(feature, layer, title, fields); }, 
+	style: {weight: 2, opacity: 1, color: 'orange', dashArray: '4', fillOpacity: 0 },
+	onEachFeature: function(feature, layer) { 
+		layer.on({
+			//click: onMapClick,
+			click: function (e) {
+				var loc = '<br>Located in Prabhag : ' + feature.properties.wardnum;
+				url = getTileURL(e.latlng.lat, e.latlng.lng, map.getZoom()); //integrated the tile solution from http://jsfiddle.net/84P9r/ with this popup.
+				popup
+				.setLatLng(e.latlng)
+				.setContent(e.latlng.toString() + loc)
+				.openOn(map);
+			},
+			mouseover: function (e) {
+				$('#wardNum').html('Mouse currently over Prabhag <b>' + feature.properties.wardnum + '</b>');
+			},
+			mouseout: function (e) {
+				$('#wardNum').html('');
+			}
+		}); // end of layer.on
+	} // end of onEachFeature
+}).addTo(map);
+omnivore.geojson(DATAPATH+'pune-electoral-wards.geojson', null, wards);
+layerControl.addOverlay(wards , "Electoral Ward Boundaries");
+
+var adminlayer = L.geoJson(null, { 
+	//onEachFeature: function (feature, layer) { defaultOnEachFeature(feature, layer, title, fields); }, 
+	style: {weight: 2, opacity: 1, color: 'yellow', dashArray: '4', fillOpacity: 0 },
+	onEachFeature: function(feature, layer) { 
+		layer.on({
+			//click: onMapClick,
+			click: function (e) {
+				var loc = '<br>Located in ' + feature.properties.name;
+				url = getTileURL(e.latlng.lat, e.latlng.lng, map.getZoom()); //integrated the tile solution from http://jsfiddle.net/84P9r/ with this popup.
+				popup
+				.setLatLng(e.latlng)
+				.setContent(e.latlng.toString() + loc)
+				.openOn(map);
+			},
+			mouseover: function (e) {
+				$('#wardNum').html('Mouse currently over ' + feature.properties.name);
+			},
+			mouseout: function (e) {
+				$('#wardNum').html('');
+			}
+		}); // end of layer.on
+	} // end of onEachFeature
+	});
+omnivore.geojson(DATAPATH+'pune-admin-wards.geojson', null, adminlayer);
+//omnivore.csv(DATAPATH+'pune-admin-ward-offices.csv', null, adminlayer);
+layerControl.addOverlay(adminlayer , "Admin Ward Boundaries");
+
+*/
+//######################################################
+// OPACITY CONTROL:
+
+//Create the opacity controls
+var opacitySlider = new L.Control.opacitySlider({position: 'bottomright'});
+map.addControl(opacitySlider);
+//Specify the layer for which you want to modify the opacity. Note that the setOpacityLayer() method applies to all the controls.
+//You only need to call it once. 
+opacitySlider.setOpacityLayer(funcLayer);
+
+funcLayer.setOpacity(0.9).addTo(map);
+//funcLayer.bringToFront();
+
+//######################################################
+
+// popup giving lat-long + tile, zoom level
+var popup = L.popup();
+function onMapClick(e) {
+	//url = getTileURL(e.latlng.lat, e.latlng.lng, map.getZoom()); //integrated the tile solution from http://jsfiddle.net/84P9r/ with this popup.
+	popup
+	.setLatLng(e.latlng)
+	.setContent(e.latlng.toString() + '<br>Zoom: ' + map.getZoom() /*+ url*/)
+	.openOn(map);
+}
+map.on('click', onMapClick); 
+
+// Lat-long conversion to tiles
+function getTileURL(lat, lon, zoom) {
+	// From http://jsfiddle.net/84P9r/ : To get tile on clicking 
+    var xtile = parseInt(Math.floor( (lon + 180) / 360 * (1<<zoom) ));
+    var ytile = parseInt(Math.floor( (1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat* Math.PI / 180)) / Math.PI) / 2 * (1<<zoom) ));
+    return "<br>Tile " + zoom + "/" + xtile + "/" + ytile;
+	//modifying this to directly show mapwarper tile
+	
+	//Commenting this out, use for debugging / development:
+	//var mapwarperURL = 'http://mapwarper.net/maps/tile/'+tileSource+ '/' +zoom+ '/' +xtile+ '/' +ytile+ '.png';
+	//return '<br>Tile <a href="'+mapwarperURL+'" target="_blank">'+mapwarperURL+'</a>';
+}
+
+function nextTiles(i) {
+	var e = document.getElementById("overlaySelector");
+	e.selectedIndex +=i ;
+	//loop-around from the top or bottom depending on increment/decrement
+	if(e.selectedIndex == -1) {
+		if(i>0) e.selectedIndex = 0; 
+		else e.selectedIndex = e.length - 1;
+	}
+	changeTiles();
+}
+
+/* obtaining parameters from URL. Like: wise-map.html?sector=sanitation&index=y from https://stackoverflow.com/a/2405630/4355695 */
+var urlParam = function(name, w){
+    w = w || window;
+    var rx = new RegExp('[\&|\?]'+name+'=([^\&\#]+)'),
+        val = w.location.search.match(rx);
+    return !val ? '':val[1];
+}
+var firstTiles = urlParam('url')
+if ( firstTiles ) {
+console.log("Loading tile source from URL : ",firstTiles);
+document.getElementById("customOverlay").value = firstTiles;
+changeTiles();
+}
+
+
+</script>
+</body>
+</html>

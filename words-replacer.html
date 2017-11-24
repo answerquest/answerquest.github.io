@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<head><title>Words Replacer : CTRL+H on Steroids</title>
+<style>
+pre { 
+	width:50%; 
+	border: dotted 1px black; 
+	white-space: pre-wrap;
+	background-color: silver;
+}
+@media screen and (max-width: 1020px) {
+    pre { width:100%; }
+}
+</style>
+<script type="text/javascript">
+function ImproveEnglish()
+{
+
+var array1 = document.getElementById('badenglish').value.split('\n');
+var array2 = document.getElementById('goodenglish').value.split('\n');
+var count = 0;
+var totalcount = 0;
+document.getElementById("log").value = "";
+
+var LENGTH = array1.length;
+
+if ( LENGTH != array2.length ) { 
+	document.getElementById("output_text").value = "Fix the substitution list! \nTarget: " + LENGTH + " , Replacements: " + array2.length;
+	return;
+}
+
+document.getElementById("log").value += "Length of substitution list: " + LENGTH + "\n";
+
+var OUTPUT=document.getElementById("input_text").value;
+
+for ( i=0; i < LENGTH; i++ ) // for loop 1
+{
+//counting how many replacements happening :
+count = OUTPUT.split(array1[i]).length - 1;
+totalcount += count;
+//str.split(search).join(replacement)
+OUTPUT = OUTPUT.split(array1[i]).join(array2[i]);
+document.getElementById("log").value += count + " times : \"" + array1[i] + "\" >> \"" + array2[i] + "\"\n";
+} //end of for loop 1
+
+document.getElementById("log").value += "\nFound and Replaced "+ totalcount + " occurrences total.\n\n";
+document.getElementById("output_text").value = OUTPUT;
+} // end of function ImproveEnglish()
+
+function toTitleCase()
+{
+	var str = document.getElementById("output_text").value;
+    var TitleStr = str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1);});
+	document.getElementById("output_text").value = TitleStr;
+}
+</script>
+<body>
+<h3>Words Replacer : Ctrl+H on Steroids!</h3>
+<table width="100%">
+<tr width="100%">
+<td width="50%">
+Paste the original text in the box below. <br>
+<textarea id="input_text" cols="60" rows="30"></textarea>
+<br>
+<input type = "button" value="Replace!" onClick="ImproveEnglish()" style="width: 15em;  height: 3em;">
+</td>
+<td>
+Output box:<br>
+<textarea id="output_text" cols="60" rows="30"></textarea>
+<br>
+<input type = "button" value="Title Case but preserve abbreviations" onClick="toTitleCase()">
+<br>
+</td>
+</tr>
+</table>
+<hr>
+<h3>Substitution list: </h3>
+<table width="100%">
+<tr width="100%">
+<td width="50%">
+Words to replace:<br>
+<textarea id="badenglish" cols="50" rows="30">
+</textarea>
+</td>
+<td width="50%">
+Replace with..<small>(please maintain order! Even blank lines are counted)</small><br>
+<textarea id="goodenglish" cols="50" rows="30">
+</textarea>
+</td>
+</tr>
+</table> 
+<br>
+<input type = "button" value="Clear replacements" onClick="document.getElementById('badenglish').value=''; document.getElementById('goodenglish').value='';">
+<br><br>
+<h3>Log:</h3>
+<textarea id="log"></textarea>
+<h3>Sample Usage</h3>
+<pre>
+Original Text:
+Paste the original text in the box below. 
+
+---
+Words to replace:
+ in
+text of
+text from
+
+---
+
+Replace with:
+ of
+text from
+MUHAHAHAA
+
+----
+// notice the space before "in" and "of". This is to disambiguate from the letters "in" inside a word like "original".
+
+Output:
+Paste the original MUHAHAHAA the box below. 
+
+==========
+Explanation:
+The script makes its way sequentially down the list, and uses the replaced text for every subsequent replacement. Hence, it's possible to chain the replacements:
+
+original text in the >> original text of the >> original text from the >> original MUHAHAHAA the
+
+</pre>
+
+<p>By Nikhil VJ, nikhil.js [at] gmail.com. Created during a task to fix a large amount of transliteration mis-spellings.
+</body>
+</html>
