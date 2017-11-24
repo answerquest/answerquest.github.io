@@ -16,3 +16,5 @@ Repo for programs, apps. [See the repo](https://github.com/answerquest/answerque
 [Playback of GPS data of multiple buses](https://answerquest.github.io/GPSPlayback/)
 
 [Bus Stops and Routes Manager](http://nikhilvj.cu.cc/busroutes/): A prototype for interlinking of two types of databases to each other inside wordpress platform, and having a possibility for creating a GTFS feed creator.
+
+[Words Replacer](words-replacer.html): Ctrl+H on steroids. Make a range of word/phrase replacements on a text sequentially.
