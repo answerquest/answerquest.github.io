@@ -246,14 +246,28 @@ var urlParam = function(name, w){
     return !val ? '':val[1];
 }
 var firstTiles = decodeURI( urlParam('url') );
-if ( firstTiles ) {
+var mapwarperID  = decodeURI( urlParam('mapwarper') );
+var mapboxID  = decodeURI( urlParam('mapbox') );
+var accesstoken  = decodeURI( urlParam('accesstoken') );
+
+if ( mapwarperID ) {
+	console.log("Loading tile source from Mapwarper ID : ",mapwarperID);
+document.getElementById("customOverlay").value = "http://mapwarper.net/maps/tile/" + mapwarperID + "/{z}/{x}/{y}.png";
+changeTiles();
+}
+else if ( firstTiles ) {
 console.log("Loading tile source from URL : ",firstTiles);
 document.getElementById("customOverlay").value = firstTiles;
 changeTiles();
 }
+else if ( mapboxID && accesstoken ) {
+console.log("Loading tile source from Mapbox ID : ",mapboxID, " access token: ", accesstoken);
+document.getElementById("customOverlay").value = "https://a.tiles.mapbox.com/v4/" + mapboxID + "/{z}/{x}/{y}.png?access_token=" + accesstoken;
+changeTiles();
+}	
 
 function showInstructions() {
-	window.alert("Load your own tileset, like [Mumbai slums data](http://mapwarper.net/maps/25733#Export_tab) for example. Put any `../{z}/{x}/{y}..` type tiles URL at bottom and press Update. Explore <http://mapwarper.net> for many such rasters. \nMapbox tilesets can also be used: URL schema:\n <https://a.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={acesstoken}>\nReplace {id} with your tileset's map id and use your mapbox account's accessToken.\nYou can also directly load the tileset via `?url=` parameter in the URL, [see example](https://answerquest.github.io/overlap-custom.html?url=http://mapwarper.net/maps/tile/25733/{z}/{x}/{y}.png).");
+	window.alert("Overlay your own raster or georeferenced map. \nPut any tiles URL schema like '../{z}/{x}/{y}..' at bottom and press Update. \nExplore <http://mapwarper.net> for many such rasters. \n\nMapbox tilesets can also be used, look up its URL schema online.\n\nYou can also directly load the tileset by putting '?url={URL}' at the end, \nor '?mapwarper={id}' for Mapwarper maps, \nor 'mapbox={id}&accesstoken={accesstoken}' for Mapbox.");
 }
 </script>
 </body>
