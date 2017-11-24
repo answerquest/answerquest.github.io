@@ -18,4 +18,4 @@ Repo for programs, apps. [See the repo](https://github.com/answerquest/answerque
 [Overlap](overlap.html) : Load image/raster maps like Development Plan, fading in and out over zoomable web map with satellite view and other map views.
 
 [Overlap-custom](overlap-custom.html) : Load your own tileset, like [Mumbai slums data](http://mapwarper.net/maps/25733#Export_tab) for example. Put any `../{z}/{x}/{y}..` type tiles URL and paste it at bottom. Explore <http://mapwarper.net> for many such rasters. <br>Mapbox tilesets can also be used: URL schema: `https://a.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={acesstoken}` : Replace `{id}` with your tileset's map id and use your mapbox account's accessToken.
-<br>You can also directly load the tileset via ?url= parameter in the URL, example: <https://answerquest.github.io/overlap-custom.html?url=http://mapwarper.net/maps/tile/25733/{z}/{x}/{y}.png>
+<br>You can also directly load the tileset via `?url=` parameter in the URL, [see example](https://answerquest.github.io/overlap-custom.html?url=http://mapwarper.net/maps/tile/25733/{z}/{x}/{y}.png).
