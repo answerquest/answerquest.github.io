@@ -242,7 +242,7 @@ var urlParam = function(name, w){
         val = w.location.search.match(rx);
     return !val ? '':val[1];
 }
-var firstTiles = urlParam('url')
+var firstTiles = decodeURI( urlParam('url') );
 if ( firstTiles ) {
 console.log("Loading tile source from URL : ",firstTiles);
 document.getElementById("customOverlay").value = firstTiles;
