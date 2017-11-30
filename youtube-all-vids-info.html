@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Youtube: Get all vids of a youtube user, channel or playlist</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<style>
+		body, textarea {
+			font-family: "Open Sans","Arial";
+		}
+		textarea {
+			font-size: 10pt;
+		}
+	</style>
+</head>
+<body>
+<h2>Get all vids of a youtube user, channel or playlist</h2>
+
+<p>
+Your Youtube API Access Key: <input id="accesskey" type="text" size="50"> | <small><a target="_blank" href="https://developers.google.com/youtube/v3/getting-started">Click here to get your Access Key</a></small><br>
+
+Uploads Playlist Id: <input id="playlistId" type="text" size="40" value="UUT7EcU7rC44DiS3RkfZzZMg"> | <small><a target="_blank" href="https://developers.google.com/apis-explorer/#p/youtube/v3/youtube.channels.list?part=contentDetails&forUsername=arvindguptatoys&fields=items%252FcontentDetails%252FrelatedPlaylists%252Fuploads&_h=38&">Click here to find playlist Id (requires username or channel id)</a></small><br>
+
+Number of videos to fetch: <input id="vidslimit" type="text" value="200"> | <small>will start from latest</small> | 
+<small><a target="_blank" href="javascript:findTotalVids()">Click here to calculate the total number of videos (requires the playlist id)</a></small>
+<br>
+
+
+<p><input id="search-btn" type="button" value="Fetch Videos Listing"> <small>Give it some time. The script pauses for a breather after every 50 entries, and it's an asynchronous call.</small></p>
+</p><p>Output: (in CSV format, copy-paste to a spreadsheet) </p>
+<textarea id="output" rows="25" cols="150"></textarea>
+<script>
+	
+$("#search-btn").on("click", function() {
+// to trigger on a button click
+document.getElementById("output").value = '"sr","date","title","id","link"\n';
+var params = {
+	"vidslimit" : parseInt( document.getElementById("vidslimit").value ) || 50,
+	"accessKey" : document.getElementById("accesskey").value, 
+	"playlistId" : document.getElementById("playlistId").value
+}
+
+//document.getElementById("output").value = JSON.stringify(params, null, 2);
+getVideos('',0,params);
+});
+
+
+function getVideos(nextPageToken, vidsDone, params) {
+
+$.getJSON("https://www.googleapis.com/youtube/v3/playlistItems", {
+	key: params.accessKey ,
+	part: "snippet",
+	maxResults: 50,
+	playlistId: params.playlistId,
+	//fields: "items(snippet(publishedAt,resourceId/videoId,title)),nextPageToken,pageInfo/totalResults",
+	fields: "items(snippet(publishedAt,resourceId/videoId,title)),nextPageToken",
+	pageToken: ( nextPageToken || '' )
+	}, 
+	function(data) {
+		// process JSON variable, extract the 50 videos info		
+		for (i=0; i < data.items.length; i++) {
+			vidsDone ++;
+			document.getElementById("output").value += vidsDone + ',"' + data.items[i].snippet.publishedAt.substr(0,10) + '","' + data.items[i].snippet.title + '","' + data.items[i].snippet.resourceId.videoId + '","' + 'https://youtu.be/' + data.items[i].snippet.resourceId.videoId  + '"\n';
+		}
+		
+		//document.getElementById("output").value += 'nextPageToken: '+ data.nextPageToken + '\n';
+		
+		// from https://stackoverflow.com/a/26557626/4355695
+		document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+		
+		if ( vidsDone < params.vidslimit) {
+			
+			setTimeout(function(){ getVideos( data.nextPageToken, vidsDone , params); }, 250);
+			//getVideos( data.nextPageToken, vidsDone+1 , params);
+		}
+	}
+).fail(function(jqXHR, textStatus, errorThrown) {
+		document.getElementById("output").value += 'Error : ' + ( jqXHR.responseText || errorThrown ) + '\n\n';
+	}
+);
+
+}
+
+function findTotalVids( ) {
+	$.getJSON("https://www.googleapis.com/youtube/v3/playlistItems", {
+	key: document.getElementById("accesskey").value,
+	playlistId: document.getElementById("playlistId").value,
+	part: "snippet",
+	fields: "pageInfo/totalResults"
+	},
+	function(data) {
+		document.getElementById("vidslimit").value = data.pageInfo.totalResults;
+	});
+}
+
+</script>
+
+<p>
+By <a href="http://nikhilvj.cu.cc">Nikhil VJ</a>. <a href="https://github.com/answerquest/answerquest.github.io/youtube-all-vids-info.html">See the code.</a>
+</p>
+</body>
+</html>
