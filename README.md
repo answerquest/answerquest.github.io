@@ -25,3 +25,5 @@ Repo for programs, apps. [See the repo](https://github.com/answerquest/answerque
 <br>You can also directly load the tileset by putting `?url={URL}` at the end, 
 <br>or `?mapwarper={id}` for Mapwarper maps, 
 <br>or `mapbox={id}&accesstoken={accesstoken}` for Mapbox tilesets. (If you have geo-referenced your map using QGIS and have the GeoTIFF file on your computer, you can upload it to Mapbox Studio under Tilesets. Upload it there, then use this tool to make it shareable on the web.)
+
+[bangalore-landuse-existingVproposed.html](bangalore-landuse-existingVproposed.html) : Bangalore Dec2017 Existing vs Proposed Land Use Maps side-by-side comparison, overlaid over web map. Maps georeferenced by Arun Ganesh, Datameet.
