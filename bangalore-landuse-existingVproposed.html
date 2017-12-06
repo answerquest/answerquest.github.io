@@ -21,14 +21,26 @@ body {
 	bottom: 0;
 	width: 100%;
 }
+#title_container, #left, #right {
+	z-index: 10000;
+	position: fixed;
+	background-color: rgba(0,0,0,0.5);
+	color: white;
+	padding: 5px;
+}
 #title_container {
-        z-index: 10000;
-        position: fixed;
-        left: 10px;
-        bottom: 10px;
-        background-color: rgba(225,225,200,0.5);
-        padding: 5px;
-    }
+	left: 10px;
+	bottom: 10px;
+}
+#left {
+	left: 0px;
+	top: 300px;
+}
+#right {
+	right: 0px;
+	top: 300px;
+}
+
 </style>
 </head>
 
@@ -37,6 +49,8 @@ body {
 <h3>Bangalore Dec2017<br> Existing vs Proposed Land Use Map</h3>
 <small><a href="https://github.com/answerquest/answerquest.github.io/blob/master/bangalore-landuse-existingVproposed.html">See the code</a></small>
 </div>
+<div id="left">Existing</div>
+<div id="right">Proposed</div>
 
 <div id='map'></div>
 
