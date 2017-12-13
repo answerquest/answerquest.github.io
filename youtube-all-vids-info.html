@@ -4,6 +4,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Youtube: Get all vids of a youtube user, channel or playlist</title>
 	<script src="lib/jquery.min.v1.10.2.js"></script>
+	<script src="lib/papaparse.min.js"></script> <!-- from https://papaparse.com -->
 	<style>
 		body, textarea {
 			font-family: "Open Sans","Arial";
@@ -64,7 +65,6 @@ Number of videos to fetch: <input id="vidslimit" type="text" value="200" size="1
 <p>nextPageToken's List <small>(In case you want to pick up later where you left off)</small><br>
 	<textarea id="tokensList" rows="10" cols="30"></textarea></p>
 
-<script src="lib/papaparse.min.js"></script> <!-- from https://papaparse.com -->
 <script>
 var vidsList = [];
 var accumulator = [];
@@ -222,7 +222,7 @@ function download_file(name, id, mime_type) {
 
 <hr>
 <p>
-By <a href="http://nikhilvj.cu.cc">Nikhil VJ</a>. <a href="https://github.com/answerquest/answerquest.github.io/youtube-all-vids-info.html">See the code.</a>
+By <a href="http://nikhilvj.cu.cc">Nikhil VJ</a>. <a href="https://github.com/answerquest/answerquest.github.io/blob/master/youtube-all-vids-info.html">See the code.</a>
 </p>
 <p><small>
 	Youtube API <a href="https://developers.google.com/youtube/v3/determine_quota_cost">Quota cost calculator</a> As of Dec 2017, 
