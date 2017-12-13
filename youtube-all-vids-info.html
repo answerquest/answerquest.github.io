@@ -3,84 +3,137 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Youtube: Get all vids of a youtube user, channel or playlist</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="lib/jquery.min.v1.10.2.js"></script>
 	<style>
 		body, textarea {
 			font-family: "Open Sans","Arial";
 		}
 		textarea {
-			font-size: 10pt;
+			font-family: "monospace";
+			font-size: 8pt;
+			white-space: pre;
+			overflow-wrap: normal;
+			overflow-x: scroll;
 		}
 	</style>
 </head>
 <body>
 <h2>Get all vids of a youtube user, channel or playlist</h2>
 
+<small>The functions running on this page are mostly recursive asynchronous calls : one function calling itself for the next iteration after a valid response is received. Hence, with larger numbers of videos, give it time. </small>
+
+<h3>1. Enter inputs</h3>
 <p>
 Your Youtube API Access Key: <input id="accesskey" type="text" size="50"> | <small><a target="_blank" href="https://developers.google.com/youtube/v3/getting-started">Click here to get your Access Key</a></small><br>
 
-Uploads Playlist Id: <input id="playlistId" type="text" size="40" value="UUT7EcU7rC44DiS3RkfZzZMg"> | <small><a target="_blank" href="https://developers.google.com/apis-explorer/#p/youtube/v3/youtube.channels.list?part=contentDetails&forUsername=arvindguptatoys&fields=items%252FcontentDetails%252FrelatedPlaylists%252Fuploads&_h=38&">Click here to find playlist Id (requires username or channel id)</a></small><br>
+Uploads Playlist Id: <input id="playlistId" type="text" size="40" value="UUT7EcU7rC44DiS3RkfZzZMg"> | <small><a target="_blank" href="https://developers.google.com/apis-explorer/#p/youtube/v3/youtube.channels.list?part=contentDetails&forUsername=arvindguptatoys&fields=items%252FcontentDetails%252CpageInfo%252FtotalResults">Click here to find playlist Id (requires username or channel id)</a></small><br>
 
-Number of videos to fetch: <input id="vidslimit" type="text" value="200"> | <small>will start from latest</small> | 
+Number of videos to fetch: <input id="vidslimit" type="text" value="200" size="10"> | <small>will start from latest</small> | 
 <small><a target="_blank" href="javascript:findTotalVids()">Click here to calculate the total number of videos (requires the playlist id)</a></small>
-<br>
 
+<p><small>Page Token to start from, if any: <input id="startToken" type="text" value="" size="10"> | In case you want to pick up where you left off and not have to cycle through the ones already covered</small></p>
 
-<p><input id="search-btn" type="button" value="Fetch Videos Listing"> <small>Give it some time. The script pauses for a breather after every 50 entries, and it's an asynchronous call.</small></p>
+<hr>
+<h3>2. Basic Listing</h3>
+<p><button id="search-btn">Click here to Fetch Videos Listing</button></p>
 </p><p>Output: (in CSV format, copy-paste to a spreadsheet) </p>
-<textarea id="output" rows="25" cols="150"></textarea>
-<script>
-	
-$("#search-btn").on("click", function() {
-// to trigger on a button click
-document.getElementById("output").value = '"sr","date","title","id","link"\n';
-var params = {
-	"vidslimit" : parseInt( document.getElementById("vidslimit").value ) || 50,
-	"accessKey" : document.getElementById("accesskey").value, 
-	"playlistId" : document.getElementById("playlistId").value
-}
+<p><textarea id="output" rows="16" cols="100"></textarea>
+<button onclick='download_file("vidsListing.csv", "output")'>Download CSV</button></p>
 
-//document.getElementById("output").value = JSON.stringify(params, null, 2);
-getVideos('',0,params);
+<hr>
+<h3>3. Full vids info</h3>
+<small>Click this only AFTER your vids have finished loading above</small>
+<p><button id="fullvids-btn">Click to fetch detailed data of all videos</button> 
+	
+<small><font color="red">Note: This will send one API request per video. Watch your quota.</font></small></p>
+
+<p>Status: <input type="textStatus" id="status" size="50" disabled></p>
+
+<p>Note: Press the buttons below only after status shows all vids have been fetched. Else you'll only get what's been done so far.</p>
+
+<hr>
+<h3>4. Detailed data</h3>
+<small>If you want more details of each video, like views, counts, description</small>
+<p><button onclick='download_file("vidsData.json", "json")'>Download JSON</button>
+	| <button onclick='download_file("vidsData.csv", "csv")'>Download CSV</button>
+	| <button onclick='download_file("fulljson.json", "fulljson")'>Download Full JSON data from API</button></p>
+<p><small>Note: The description is escaped to HTML chars using encodeURI() function, to accommodate multiple-lines. Please use decodeURI() to decode it</small></p>
+
+<hr>
+<h3>5. Extra Info</h3>
+<p>nextPageToken's List <small>(In case you want to pick up later where you left off)</small><br>
+	<textarea id="tokensList" rows="10" cols="30"></textarea></p>
+
+<script src="lib/papaparse.min.js"></script> <!-- from https://papaparse.com -->
+<script>
+var vidsList = [];
+var accumulator = [];
+var tokensList = [];
+var accumulatorFull = [];
+
+// When the Basic Listing button is pressed
+$("#search-btn").on("click", function() {
+	// to trigger on a button click
+	document.getElementById("output").value = '"num","date","title","id","link"\n';
+	var params = {
+		"vidslimit" : parseInt( document.getElementById("vidslimit").value ) || 50,
+		"accessKey" : document.getElementById("accesskey").value, 
+		"playlistId" : document.getElementById("playlistId").value
+	}
+	//document.getElementById("output").value = JSON.stringify(params, null, 2);
+	vidsList = []; //reset
+	tokensList = "vids done,nextPageToken for playlistId: "+params.playlistId + "\n";
+	var pageToken = document.getElementById("startToken").value || '';
+	getVideos(pageToken,0,params);
 });
 
+// When the Detailed data fetching button is pressed
+$("#fullvids-btn").on("click", function() {
+	accumulator = [], accumulatorFull = []; // reset
+	document.getElementById("status").value = "Fetching... "
+	fetchViddetails( 0 );
+});
 
+// Recursive function for cycling through the playlist, 50 videos at a time. Upon successful API call, the function gets the next list's token and calls itself again. It stops calling itself when the total videos count has been reached (to exact or immediate next multiple of 50)
 function getVideos(nextPageToken, vidsDone, params) {
-
-$.getJSON("https://www.googleapis.com/youtube/v3/playlistItems", {
-	key: params.accessKey ,
-	part: "snippet",
-	maxResults: 50,
-	playlistId: params.playlistId,
-	//fields: "items(snippet(publishedAt,resourceId/videoId,title)),nextPageToken,pageInfo/totalResults",
-	fields: "items(snippet(publishedAt,resourceId/videoId,title)),nextPageToken",
-	pageToken: ( nextPageToken || '' )
-	}, 
-	function(data) {
-		// process JSON variable, extract the 50 videos info		
-		for (i=0; i < data.items.length; i++) {
-			vidsDone ++;
-			document.getElementById("output").value += vidsDone + ',"' + data.items[i].snippet.publishedAt.substr(0,10) + '","' + data.items[i].snippet.title + '","' + data.items[i].snippet.resourceId.videoId + '","' + 'https://youtu.be/' + data.items[i].snippet.resourceId.videoId  + '"\n';
-		}
-		
-		//document.getElementById("output").value += 'nextPageToken: '+ data.nextPageToken + '\n';
-		
-		// from https://stackoverflow.com/a/26557626/4355695
-		document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
-		
-		if ( vidsDone < params.vidslimit) {
+	$.getJSON("https://www.googleapis.com/youtube/v3/playlistItems", {
+		key: params.accessKey ,
+		part: "snippet",
+		maxResults: 50,
+		playlistId: params.playlistId,
+		//fields: "items(snippet(publishedAt,resourceId/videoId,title)),nextPageToken,pageInfo/totalResults",
+		fields: "items(snippet(publishedAt,resourceId/videoId,title)),nextPageToken",
+		pageToken: ( nextPageToken || '' )
+		}, 
+		function(data) {
+			// process JSON variable, extract the 50 videos info		
+			for (i=0; i < data.items.length; i++) {
+				vidsDone ++;
+				document.getElementById("output").value += vidsDone + ',"' + data.items[i].snippet.publishedAt.substr(0,10) + '","' + data.items[i].snippet.title + '","' + data.items[i].snippet.resourceId.videoId + '","' + 'https://youtu.be/' + data.items[i].snippet.resourceId.videoId  + '"\n';
+				// 
+				vidsList.push(data.items[i].snippet.resourceId.videoId);
+			}
 			
-			setTimeout(function(){ getVideos( data.nextPageToken, vidsDone , params); }, 250);
-			//getVideos( data.nextPageToken, vidsDone+1 , params);
-		}
-	}
-).fail(function(jqXHR, textStatus, errorThrown) {
-		document.getElementById("output").value += 'Error : ' + ( jqXHR.responseText || errorThrown ) + '\n\n';
-	}
-);
+			// Archiving tokens:
+			tokensList += vidsDone + ',' + data.nextPageToken + '\n'; 	
 
+			// from https://stackoverflow.com/a/26557626/4355695
+			document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+			
+			if ( vidsDone < params.vidslimit) {
+				getVideos( data.nextPageToken, vidsDone , params);
+			} 
+			 else { // closing actions to do once we have listed the videos needed.
+			 	document.getElementById("tokensList").value = tokensList;
+			 }
+		}
+	).fail(function(jqXHR, textStatus, errorThrown) {
+			document.getElementById("output").value += 'Error : ' + ( jqXHR.responseText || errorThrown ) + '\n\n';
+		}
+	);
 }
 
+// Find total number of videos 
 function findTotalVids( ) {
 	$.getJSON("https://www.googleapis.com/youtube/v3/playlistItems", {
 	key: document.getElementById("accesskey").value,
@@ -93,10 +146,91 @@ function findTotalVids( ) {
 	});
 }
 
+// Recursive function that fetches the details of each video in the playlist
+function fetchViddetails( i ) {
+	$.getJSON("https://www.googleapis.com/youtube/v3/videos", {
+		key: document.getElementById("accesskey").value,
+		part: "snippet,statistics",
+		id: vidsList[i]
+		}, function(data) {
+			
+			accumulatorFull.push(data); // storing the full JSON response received from Youtube
+
+			var description = encodeURI(data.items[0].snippet.description);
+			var vidInfo = {
+				"num" : (accumulator.length + 1),
+				"id" : vidsList[i],
+				"title" : data.items[0].snippet.title,
+				"date" : data.items[0].snippet.publishedAt.substr(0,10),
+				"viewcount" : data.items[0].statistics.viewCount,
+				"likes" : data.items[0].statistics.likeCount,
+				"dislikes" : data.items[0].statistics.dislikeCount,
+				"thumbnail" : data.items[0].snippet.thumbnails.high.url,
+				"link" : 'https://youtu.be/' + vidsList[i],
+				"tags" : data.items[0].snippet.tags ? data.items[0].snippet.tags.join() : "",
+				"description" : description
+			}
+			accumulator.push(vidInfo);
+
+			document.getElementById("status").value = "Fetched details of " + accumulator.length + " videos total";
+			if( i < vidsList.length - 1) {
+				fetchViddetails( i+1 ) //recursive : calls itself if the list isn't over.
+			}
+	}).fail(function(jqXHR, textStatus, errorThrown) {
+		document.getElementById("status").value = 'Error : ' + ( jqXHR.responseText || errorThrown ) + '\n\n';
+	}
+	);
+}
+
+// download link: Adapted from https://stackoverflow.com/a/35251739/4355695
+function dynamic_text(id) {
+	if(id == 'json')
+    	return JSON.stringify(accumulator, null, 2);
+    else if (id == 'csv') 
+    	return contentString = Papa.unparse(accumulator, {quotes: true});
+    else if (id == 'fulljson')
+    	return JSON.stringify(accumulatorFull, null, 2);
+    else
+        return document.getElementById(id).value;
+    }
+
+function download_file(name, id, mime_type) {
+	// Adapted from https://stackoverflow.com/a/35251739/4355695
+    mime_type = mime_type || "text/plain";
+
+    var contentString = dynamic_text(id);
+
+    if( !contentString.length || contentString=='[]' ) { alert('No Data! Check the previous step.'); return; }
+
+	var blob = new Blob([contentString], {type: mime_type});
+	var dlink = document.createElement('a');
+	dlink.download = name;
+	dlink.href = window.URL.createObjectURL(blob);
+	dlink.onclick = function(e) {
+	// revokeObjectURL needs a delay to work properly
+	var that = this;
+	setTimeout(function() {
+		window.URL.revokeObjectURL(that.href);
+	}, 1500);
+	};
+
+	dlink.click();
+	dlink.remove();
+}
+
 </script>
 
+<hr>
 <p>
 By <a href="http://nikhilvj.cu.cc">Nikhil VJ</a>. <a href="https://github.com/answerquest/answerquest.github.io/youtube-all-vids-info.html">See the code.</a>
 </p>
+<p><small>
+	Youtube API <a href="https://developers.google.com/youtube/v3/determine_quota_cost">Quota cost calculator</a> As of Dec 2017, 
+	<br>Quota cost of Detailed data Per video : 5,
+	<br>Quota cost of each batch of 50 playlist items : 3
+	<br>See <a href="https://developers.google.com/analytics/devguides/config/mgmt/v3/limits-quotas#general_quota_limits">Limits and Quotas on API Requests</a>
+</small>
+</p>
+
 </body>
 </html>
