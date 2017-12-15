@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
+<title>Side-by-side compare georeferenced rasters</title>
+	<script src='lib/leaflet-src.js'></script>
+	<script src="lib/leaflet-side-by-side.min.js"></script>
+	<link href='lib/leaflet.css' rel='stylesheet' />
+	<link rel="stylesheet" href="lib/leaflet-slider.css"/>
+	<script src="lib/leaflet-slider.js"></script>
+	<link rel="stylesheet" href="lib/Control.FullScreen.css" />
+    <script src="lib/leaflet.functionaltilelayer.js"></script>
+
+<style>
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+}
+#map {
+	position: absolute;
+	bottom: 0;
+	top: 0;
+	//height: 90%;
+	width: 100%;
+}
+#title_container, #left, #right {
+	z-index: 10000;
+	position: fixed;
+	background-color: rgba(0,0,0,0.5);
+	color: white;
+	padding: 5px;
+}
+#title_container {
+	left: 10px;
+	bottom: 10px;
+}
+
+#left {
+	left: 0px;
+	top: 300px;
+}
+#right {
+	right: 0px;
+	top: 300px;
+}
+#title_container a:link, #title_container a:visited {
+	color: white;
+}
+#leftOverlay, #rightOverlay {
+	color: white;
+	background-color: #3d3d3d;
+	border-width: 1px;
+}
+
+</style>
+</head>
+
+<body>
+<div id="title_container">
+<big>Side-by-side compare georeferenced rasters</big>
+<small><p>Left side: <input type="text" id="leftOverlay" size="40" value="http://mapwarper.net/maps/tile/26003/{z}/{x}/{y}.png"> </p><p>Right side: <input type="text" id="rightOverlay" size="40" value="http://mapwarper.net/maps/tile/25970/{z}/{x}/{y}.png"></p>
+<a href="https://github.com/answerquest/answerquest.github.io/blob/master/overlap-custom-side.html">Source code</a> | <a href="http://datameet.org">Datameet</a>
+<br>
+By <a href="http://nikhilvj.cu.cc">Nikhil VJ</a> | <a href="https://www.instamojo.com/@nikhilvj/">i appreciate this!</a>
+</small>
+</div>
+<div id="left">Left</div>
+<div id="right">Right</div>
+
+<div id='map'></div>
+
+<script>
+// ************************
+// INITIAL
+const osmLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>',
+	mapboxUrl = 'https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png',
+	MBAttrib = '&copy; ' + osmLink + ' Contributors & <a href="https://www.mapbox.com/about/maps/">Mapbox</a>';
+
+var MBstreets = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mlpl2d', attribution: MBAttrib, maxZoom: 20}),
+	MBsatlabel = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mmaa87', attribution: MBAttrib}),
+	MBsat = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mni8e7', attribution: MBAttrib}),
+	MBlight = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mmobne', attribution: MBAttrib}),
+	MBdark = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.jme9hi44', attribution: MBAttrib}),
+	OsmIndia = L.tileLayer(mapboxUrl, {id: 'openstreetmap.1b68f018', attribution: MBAttrib, maxZoom: 20}),
+	GithubLight = L.tileLayer('http://{s}.tiles.mapbox.com/v3/github.map-xgq2svrz/{z}/{x}/{y}.png', {attribution: MBAttrib}),
+	scenic = L.tileLayer('https://api.mapbox.com/styles/v1/nikhilsheth/cj8rdd7wu45nl2sps9teusbbr/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlraGlsc2hldGgiLCJhIjoiQTREVlJuOCJ9.YpMpVVbkxOFZW-bEq1_LIw', {attribution: MBAttrib}) ; 
+
+
+var baseLayers = {
+	"OpenStreetMap.IN": OsmIndia,
+	"Mapbox Streets": MBstreets,
+	"Mapbox Satellite w/labels": MBsatlabel ,
+	"Mapbox Light": MBlight,
+	"Github Light" : GithubLight,
+	"Mapbox Dark" : MBdark,
+	"Scenic" : scenic
+};
+
+// *************************
+
+var map = L.map('map', {layers: [MBsatlabel]}).setView([13.1, 77.594563], 11);
+
+//var tileLayer = new L.TileLayer('https://api.mapbox.com/styles/v1/nikhilsheth/cj8rdd7wu45nl2sps9teusbbr/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlraGlsc2hldGgiLCJhIjoiQTREVlJuOCJ9.YpMpVVbkxOFZW-bEq1_LIw').addTo(map);
+
+var overlays = { };
+var layerControl = L.control.layers(baseLayers, overlays, {collapsed: true}).addTo(map); 
+
+
+// var leftOverlay = L.tileLayer('http://mapwarper.net/maps/tile/26003/{z}/{x}/{y}.png').addTo(map);
+var leftOverlay = new L.TileLayer.Functional(function (view) {
+		var url = document.getElementById('leftOverlay').value
+			//example: http://mapwarper.net/maps/tile/15155/{z}/{x}/{y}.png
+			.replace('{z}', view.zoom)
+			.replace('{y}', view.tile.row)
+			.replace('{x}', view.tile.column)
+			.replace('{3}', view.subdomain);
+			//.replace('{i}', tileSource);
+		return url;
+	},
+	{ maxZoom: 20 }
+).addTo(map);
+
+// var rightOverlay = L.tileLayer('http://mapwarper.net/maps/tile/25970/{z}/{x}/{y}.png').addTo(map);
+var rightOverlay = new L.TileLayer.Functional(function (view) {
+		var url = document.getElementById('rightOverlay').value
+			//example: http://mapwarper.net/maps/tile/15155/{z}/{x}/{y}.png
+			.replace('{z}', view.zoom)
+			.replace('{y}', view.tile.row)
+			.replace('{x}', view.tile.column)
+			.replace('{3}', view.subdomain);
+			//.replace('{i}', tileSource);
+		return url;
+	},
+	{ maxZoom: 20 }
+).addTo(map);
+
+// Adding event listeners for whenever the tile sources change. from https://stackoverflow.com/a/24865240/4355695
+document.getElementById('leftOverlay').onchange = function() { leftOverlay.redraw(); };
+document.getElementById('rightOverlay').onchange = function() { rightOverlay.redraw(); };
+
+// Add to the layers menu
+layerControl.addOverlay(leftOverlay , "Left Overlay");
+layerControl.addOverlay(rightOverlay , "Right Overlay");
+
+// Side by side : https://github.com/Eclipse1979/leaflet-slider
+L.control.sideBySide(leftOverlay, rightOverlay).addTo(map);
+
+// Slider : https://github.com/Eclipse1979/leaflet-slider
+slider = L.control.slider(function(value) {
+		//from https://gis.stackexchange.com/a/167173/44746
+		leftOverlay.setOpacity(value/100);
+		rightOverlay.setOpacity(value/100);
+	}, { // slider options
+		//orientation:'vertical', 
+		position: 'bottomright',
+		size: '250px',
+		min: 0,
+		max: 100,
+		value: 80,
+		logo: 'O',
+		collapsed: false,
+		title: 'Set Opacity'
+	}
+).addTo(map);
+
+// Show lat-long
+var popup = L.popup();
+function onMapClick(e) {
+	//url = getTileURL(e.latlng.lat, e.latlng.lng, map.getZoom()); //integrated the tile solution from http://jsfiddle.net/84P9r/ with this popup.
+	popup
+	.setLatLng(e.latlng)
+	.setContent('Lat-Long: ' + e.latlng.lat.toFixed(4) + ',' + e.latlng.lng.toFixed(4) + '<br>Zoom: ' + map.getZoom() /*+ url*/)
+	.openOn(map);
+}
+map.on('click', onMapClick); 
+
+function helpPopup() {
+	window.alert("Created for this: https://groups.google.com/forum/#!topic/datameet/qa0HOh903Co");
+}
+
+</script>
+</body>
+</html>
