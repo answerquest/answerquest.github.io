@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="HandheldFriendly" content="true">
+	<title>form2text</title>
+	<style>
+		body, textarea {
+			font-family: "Open Sans","Arial";
+			background: green;
+		}
+		textarea {
+			font-family: "monospace";
+			font-size: 8pt;
+			white-space: pre;
+			overflow-wrap: normal;
+			overflow-x: scroll;
+		}
+	div {
+  background:lightgreen;
+  color:black;
+  align: center;
+  vertical-align: center;
+  max-width: 320px;
+  padding:15px;
+  margin-left: auto ;
+  margin-right: auto ;
+}   
+input[type=checkbox] {
+ width: 20px; height: 20px;
+ -webkit-border-radius: 22px; -moz-border-radius: 22px; border-radius: 22px;
+  border: 1px solid #bbb;
+  vertical-align: middle; 
+}
+input[type=text] {
+	font-size: 20px;
+	}
+	.bigbutton {
+		padding-top: 10px;
+		padding-bottom: 10px;
+		padding-left: 20px;
+		padding-right: 20px;
+		width: 100%;
+
+		font-size: 20px;
+	}
+h2 { text-align: center;}
+
+	</style>
+</head>
+<body>
+<div>
+<h2>Annadata Organic<br>Food Festival</h2>
+<p>Name: <input type="text" id="name"></p>
+<p>Mobile: <input type="text" id="mobile"></p>
+<p>Email: <input type="text" id="email"></p>
+<p>Would you like to.. <br>
+	<label><input type="checkbox" class="option1" name="option1" value="(A) Know a safe food farmer"> (A) Know a safe food farmer</label><br>
+	<label><input type="checkbox" class="option1" name="option1" value="(B) Know a safe food supplier"> (B) Know a safe food supplier</label><br>
+	<label><input type="checkbox" class="option1" name="option1" value="(C) Become a safe food Farmer"> (C) Become a safe food Farmer</label><br>
+	<label><input type="checkbox" class="option1" name="option1" value="(D) Become a safe food supplier"> (D) Become a safe food supplier</label><br>
+	<label><input type="checkbox" class="option1" name="option1" value="(E) Volunteer in the movement"	> (E) Volunteer in the movement</label></p>
+<p>Location: <input type="text" id="location"></p>
+<p>Any Message: <input type="text" id="message"></p>
+
+
+<button onclick="download_file('registration.csv')" class="bigbutton">Submit</button>
+
+</div>
+<script>
+function download_file(name, mime_type) {
+	// Adapted from https://stackoverflow.com/a/35251739/4355695
+    mime_type = mime_type || "text/plain";
+
+    var checkboxes = document.getElementsByName('option1');
+    var vals = "";
+	for (var i=0, n=checkboxes.length;i<n;i++) {
+		if (checkboxes[i].checked)
+		vals += ","+checkboxes[i].value;
+	}
+
+if (vals) vals = vals.substring(1);
+
+    var contentString = '"'+ document.getElementById('name').value +'","'+ document.getElementById('mobile').value +'","'+ document.getElementById('email').value +'","'+ document.getElementById('location').value +'","'+ document.getElementById('message').value +'","'+ vals + '"';
+
+    if( !contentString.length || contentString=='[]' ) { alert('No Data! Check the previous step.'); return; }
+
+	var blob = new Blob([contentString], {type: mime_type});
+	var dlink = document.createElement('a');
+	dlink.download = name;
+	dlink.href = window.URL.createObjectURL(blob);
+	dlink.onclick = function(e) {
+	// revokeObjectURL needs a delay to work properly
+	var that = this;
+	setTimeout(function() {
+		window.URL.revokeObjectURL(that.href);
+	}, 1500);
+	};
+
+	dlink.click();
+	dlink.remove();
+	setTimeout(function() {
+		fieldsreset();	
+	}, 1500);
+}
+
+function fieldsreset() {
+	document.getElementById('name').value = '';
+	document.getElementById('mobile').value = '';
+	document.getElementById('email').value = '';
+	document.getElementById('location').value = '';
+	document.getElementById('message').value = '';
+	var checkboxes = document.getElementsByName('option1');
+	for (var i=0, n=checkboxes.length;i<n;i++) {
+		checkboxes[i].checked = false;
+	}
+}
+
+</script>
+</body>
+</html>
