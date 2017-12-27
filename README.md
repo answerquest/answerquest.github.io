@@ -29,3 +29,7 @@ Repo for programs, apps. [See the repo](https://github.com/answerquest/answerque
 [bangalore-landuse-existingVproposed.html](bangalore-landuse-existingVproposed.html) : Bangalore Dec2017 Existing vs Proposed Land Use Maps side-by-side comparison, overlaid over web map. Maps georeferenced by Arun Ganesh, Datameet.
 
 [Overlap-custom side-by-side](overlap-custom-side.html) : When one georeferenced raster layer overlay isn't enough and you need to compare two of them side by side!
+
+[Offline Form](offline-form.html) : An example of a form in a standalone webpage that saves the submitted data as a local CSV file in your downloads folder. Good for situations where you have to take registrations and have slow or no internet. Works in Google Chrome, Chromium/Iron browser; not in Firefox as of now. Later you can combine the CSV files via commands.<br>
+Windows : `copy *.csv all.txt`<br>
+Ubuntu: `for f in *.csv; do cat "$f" >> all.txt; echo "">> all.txt; done`
