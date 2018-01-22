@@ -21,7 +21,7 @@
 <h2>Convert lat-long string from ona.io to KML</h2>
 <p>Input: <br>
 <textarea id="input"></textarea><br>
-<button onclick="text2kml()" class="bigbutton">Convert to KML</button></p>
+<button onclick="text2kml()" class="bigbutton">Convert to KML</button> | <button onclick="example()">load example</button></p>
 
 <p>Output - polygon: <br>
 <textarea id="polygon"></textarea><br>
@@ -79,6 +79,10 @@ document.getElementById('polygon').value ='<?xml version="1.0" encoding="UTF-8"?
 
 // afterthought: let's make a linestring KML too, so it's just line and not polygon:
 document.getElementById('line').value = document.getElementById('polygon').value.replace('<Polygon><outerBoundaryIs><LinearRing>','<LineString>').replace('</LinearRing></outerBoundaryIs></Polygon>','</LineString>');
+}
+
+function example() {
+	document.getElementById('input').value = '18.530663 73.875515 0 0;18.534935 73.874657 0 0;18.534925 73.87626 0 0;18.531995 73.876925 0 0;18.530663 73.875515 0 0';
 }
 
 /* For saving as kml */
