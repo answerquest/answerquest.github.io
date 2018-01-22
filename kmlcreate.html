@@ -14,6 +14,9 @@
 		textarea {
 			height: 100px;
 			width: 500px;
+			white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: scroll;
 		}
 	</style>
 </head>
@@ -68,14 +71,14 @@ for (input in inputbox) {
 		longlatarray.push( rectified );
 	}
 
-	outputstring = '<Placemark><name>Shape' + shapecounter + '</name><MultiGeometry><Polygon><outerBoundaryIs><LinearRing><coordinates>' + longlatarray.join(' ') + '</coordinates></LinearRing></outerBoundaryIs></Polygon></MultiGeometry></Placemark>';
+	outputstring = '<Placemark>\n<name>Shape' + shapecounter + '</name>\n<MultiGeometry><Polygon><outerBoundaryIs><LinearRing>\n<coordinates>' + longlatarray.join(' ') + '</coordinates>\n</LinearRing></outerBoundaryIs></Polygon></MultiGeometry>\n</Placemark>';
 	shapecounter++;
 
 	totaloutput.push(outputstring);
 }
 
 
-document.getElementById('polygon').value ='<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document>' + totaloutput.join('\n') + '</Document></kml>';
+document.getElementById('polygon').value ='<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n' + totaloutput.join('\n') + '\n</Document>\n</kml>';
 
 // afterthought: let's make a linestring KML too, so it's just line and not polygon:
 document.getElementById('line').value = document.getElementById('polygon').value.replace('<Polygon><outerBoundaryIs><LinearRing>','<LineString>').replace('</LinearRing></outerBoundaryIs></Polygon>','</LineString>');
