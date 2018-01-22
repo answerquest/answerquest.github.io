@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="HandheldFriendly" content="true">
+	<title>form2text</title>
+	<style>
+		body, textarea {
+			font-family: "Open Sans","Arial";
+		
+		}
+		textarea {
+			height: 100px;
+			width: 500px;
+		}
+	</style>
+</head>
+<body>
+<h2>Convert lat-long string from ona.io to KML</h2>
+<p>Input: <br>
+<textarea id="input"></textarea></p>
+
+<p><button onclick="text2kml()" class="bigbutton">Convert to KML</button></p>
+
+<p>Output - polygon: <br>
+<textarea id="polygon"></textarea></p>
+<p><button onclick="download_file('polygon','shape-polygon.kml')" class="bigbutton">Download Polygon KML</button></p>
+
+
+<p>Output - line: <br>
+<textarea id="line"></textarea></p>
+<p><button onclick="download_file('line','shape-line.kml')" class="bigbutton">Download Line KML</button></p>
+
+<p>Preview it in <a href="http://geojson.io/" target="_blank">GeoJSON.io</a>, Upload in <a href="https://mymaps.google.com/" target="_blank">Google My Maps</a></p>
+
+By <a href="http://nikhilvj.cu.cc">Nikhil VJ</a> | <a href="https://www.instamojo.com/@nikhilvj/">i appreciate this!</a>
+</small>
+
+<script>
+
+function text2kml() {
+
+/*
+input : 18.530663 73.875515 0 0;18.534935 73.874657 0 0;18.534925 73.87626 0 0;18.531995 73.876925 0 0;18.530663 73.875515 0 0
+
+output: -84.687180,38.198642,0 -84.683888,38.197461,0
+*/
+
+var inputbox = document.getElementById('input').value.split('\n');
+var shapecounter = 1;
+var totaloutput = [];
+var outputstring = '';
+
+for (input in inputbox) {
+
+	if(inputbox[input] == '') continue;
+
+	var inputarray = inputbox[input].split(';');
+	var longlatarray = [];
+
+	for (coord in inputarray) {
+		var container = inputarray[coord].split(' ');
+		console.log(container);
+		var rectified = container[1] + ',' + container[0] + ',' + container[2];
+		//console.log(rectified);
+		longlatarray.push( rectified );
+	}
+
+	outputstring = '<Placemark><name>Shape' + shapecounter + '</name><MultiGeometry><Polygon><outerBoundaryIs><LinearRing><coordinates>' + longlatarray.join(' ') + '</coordinates></LinearRing></outerBoundaryIs></Polygon></MultiGeometry></Placemark>';
+	shapecounter++;
+
+	totaloutput.push(outputstring);
+}
+
+
+document.getElementById('polygon').value ='<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document>' + totaloutput.join('\n') + '</Document></kml>';
+
+
+document.getElementById('line').value = document.getElementById('polygon').value.replace('<Polygon><outerBoundaryIs><LinearRing>','<LineString>').replace('</LinearRing></outerBoundaryIs></Polygon>','</LineString>');
+}
+
+
+function download_file(source, name, mime_type) {
+	// Adapted from https://stackoverflow.com/a/35251739/4355695
+    mime_type = mime_type || "text/plain";
+
+    var checkboxes = document.getElementsByName('option1');
+    var vals = "";
+	for (var i=0, n=checkboxes.length;i<n;i++) {
+		if (checkboxes[i].checked)
+		vals += ","+checkboxes[i].value;
+	}
+
+if (vals) vals = vals.substring(1);
+
+    var contentString = document.getElementById(source).value;
+
+    if( !contentString.length || contentString=='[]' ) { alert('No Data! Check the previous step.'); return; }
+
+	var blob = new Blob([contentString], {type: mime_type});
+	var dlink = document.createElement('a');
+	dlink.download = name;
+	dlink.href = window.URL.createObjectURL(blob);
+	dlink.onclick = function(e) {
+	// revokeObjectURL needs a delay to work properly
+	var that = this;
+	setTimeout(function() {
+		window.URL.revokeObjectURL(that.href);
+	}, 1500);
+	};
+
+	dlink.click();
+	dlink.remove();
+	/*
+	setTimeout(function() {
+		fieldsreset();	
+	}, 1500);
+	*/
+}
+
+</script>
+</body>
+</html>
+
