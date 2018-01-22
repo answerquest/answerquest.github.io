@@ -33,3 +33,5 @@ Repo for programs, apps. [See the repo](https://github.com/answerquest/answerque
 [Offline Form](offline-form.html) : An example of a form in a standalone webpage that saves the submitted data as a local CSV file in your downloads folder. Good for situations where you have to take registrations and have slow or no internet. Works in Google Chrome, Chromium/Iron browser; not in Firefox as of now. Later you can combine the CSV files via commands.<br>
 Windows : `copy *.csv all.txt`<br>
 Ubuntu: `for f in *.csv; do cat "$f" >> all.txt; echo "">> all.txt; done`
+
+[Create KML shapes from lat-long strings in ona.io csv](kmlcreate.html)
