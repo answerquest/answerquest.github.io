@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="HandheldFriendly" content="true">
-	<title>form2text</title>
+	<title>Convert lat-long string from ona.io to KML</title>
 	<style>
 		body, textarea {
 			font-family: "Open Sans","Arial";
@@ -35,8 +35,7 @@
 
 <p>Preview it in <a href="http://geojson.io/" target="_blank">GeoJSON.io</a>, Upload in <a href="https://mymaps.google.com/" target="_blank">Google My Maps</a></p>
 
-By <a href="http://nikhilvj.cu.cc">Nikhil VJ</a> | <a href="https://www.instamojo.com/@nikhilvj/">i appreciate this!</a>
-</small>
+<p><a href="https://github.com/answerquest/answerquest.github.io/blob/master/kmlcreate.html">See the code</a> | By <a href="http://nikhilvj.cu.cc">Nikhil VJ</a> | <a href="https://www.instamojo.com/@nikhilvj/">i appreciate this!</a></p>
 
 <script>
 
@@ -44,8 +43,10 @@ function text2kml() {
 
 /*
 input : 18.530663 73.875515 0 0;18.534935 73.874657 0 0;18.534925 73.87626 0 0;18.531995 73.876925 0 0;18.530663 73.875515 0 0
+ie, [lat] [long] [alt];
 
 output: -84.687180,38.198642,0 -84.683888,38.197461,0
+ie, [long],[lat],[alt](space)
 */
 
 var inputbox = document.getElementById('input').value.split('\n');
@@ -77,11 +78,11 @@ for (input in inputbox) {
 
 document.getElementById('polygon').value ='<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document>' + totaloutput.join('\n') + '</Document></kml>';
 
-
+// afterthought: let's make a linestring KML too, so it's just line and not polygon:
 document.getElementById('line').value = document.getElementById('polygon').value.replace('<Polygon><outerBoundaryIs><LinearRing>','<LineString>').replace('</LinearRing></outerBoundaryIs></Polygon>','</LineString>');
 }
 
-
+/* For saving as kml */
 function download_file(source, name, mime_type) {
 	// Adapted from https://stackoverflow.com/a/35251739/4355695
     mime_type = mime_type || "text/plain";
