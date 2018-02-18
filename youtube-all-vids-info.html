@@ -8,6 +8,7 @@
 	<style>
 		body, textarea {
 			font-family: "Open Sans","Arial";
+			line-height: 1.5em;
 		}
 		textarea {
 			font-family: "monospace";
@@ -25,9 +26,9 @@
 
 <h3>1. Enter inputs</h3>
 <p>
-Your Youtube API Access Key: <input id="accesskey" type="text" size="50"> | <small><a target="_blank" href="https://developers.google.com/youtube/v3/getting-started">Click here to get your Access Key</a></small><br>
+Your Youtube API Access Key: <input id="accesskey" type="text" size="50"> | <small><a target="_blank" href="https://developers.google.com/youtube/v3/getting-started" title="What, you thought I'll let you use mine? :)">Click here to get your Access Key</a></small><br>
 
-Uploads Playlist Id: <input id="playlistId" type="text" size="40" value="UUT7EcU7rC44DiS3RkfZzZMg"> | <small><a target="_blank" href="https://developers.google.com/apis-explorer/#p/youtube/v3/youtube.channels.list?part=contentDetails&forUsername=arvindguptatoys&fields=items%252FcontentDetails%252CpageInfo%252FtotalResults">Click here to find playlist Id (requires username or channel id)</a></small><br>
+Uploads Playlist Id: <input id="playlistId" type="text" size="40" value="UUT7EcU7rC44DiS3RkfZzZMg"> | <small><a target="_blank" href="https://developers.google.com/apis-explorer/#p/youtube/v3/youtube.channels.list?part=contentDetails&forUsername=arvindguptatoys&fields=items%252FcontentDetails%252CpageInfo%252FtotalResults" title="yes, even all the videos on a channel are in a playlist called 'uploads'">Click here to find playlist Id (requires username or channel id)</a></small><br>
 
 Number of videos to fetch: <input id="vidslimit" type="text" value="200" size="10"> | <small>will start from latest</small> | 
 <small><a target="_blank" href="javascript:findTotalVids()">Click here to calculate the total number of videos (requires the playlist id)</a></small>
@@ -222,7 +223,7 @@ function download_file(name, id, mime_type) {
 
 <hr>
 <p>
-By <a href="http://nikhilvj.cu.cc">Nikhil VJ</a>. <a href="https://github.com/answerquest/answerquest.github.io/blob/master/youtube-all-vids-info.html">See the code.</a>
+By <a href="mailto:nikhil.js@gmail.com">Nikhil VJ</a>. <a href="https://github.com/answerquest/answerquest.github.io/blob/master/youtube-all-vids-info.html">See the code</a>. <a href="https://www.instamojo.com/@nikhilvj/">Click to Appreciate</a>.
 </p>
 <p><small>
 	Youtube API <a href="https://developers.google.com/youtube/v3/determine_quota_cost">Quota cost calculator</a> As of Dec 2017, 
