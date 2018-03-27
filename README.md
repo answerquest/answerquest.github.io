@@ -1,3 +1,6 @@
+# Personal Website
+**[Click here to open my personal webpage / CV](http://nikhilvj.cu.cc.cp-48.bigrockservers.com/).**
+
 # answerquest.github.io
 Repo for programs, apps. [See the repo](https://github.com/answerquest/answerquest.github.io).
 
