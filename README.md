@@ -38,3 +38,5 @@ Windows : `copy *.csv all.txt`<br>
 Ubuntu: `for f in *.csv; do cat "$f" >> all.txt; echo "">> all.txt; done`
 
 [Create KML shapes from lat-long strings in ona.io csv](kmlcreate.html)
+
+[Simple location picker](leaflet-center-location-picker.html) like Ola/Uber where you move the map around and the marker is the map's center.
