@@ -1,5 +1,5 @@
 # Personal Website
-**[Click here to open my personal webpage / CV](http://nikhilvj.cu.cc.cp-48.bigrockservers.com/).**
+**[Click here to open my personal webpage / CV](http://nikhilvj.co.in/).**
 
 # answerquest.github.io
 Repo for programs, apps. [See the repo](https://github.com/answerquest/answerquest.github.io).
@@ -16,7 +16,7 @@ Repo for programs, apps. [See the repo](https://github.com/answerquest/answerque
 
 [Playback of GPS data of multiple buses](https://answerquest.github.io/GPSPlayback/)
 
-[Bus Stops and Routes Manager](http://nikhilvj.cu.cc/busroutes/): A prototype for interlinking of two types of databases to each other inside wordpress platform, and having a possibility for creating a GTFS feed creator.
+[Bus Stops and Routes Manager](http://nikhilvj.co.in/busroutes/): A prototype for interlinking of two types of databases to each other inside wordpress platform, and having a possibility for creating a GTFS feed creator.
 
 [Words Replacer](words-replacer.html): Ctrl+H on steroids. Make a range of word/phrase replacements on a text sequentially.
 
