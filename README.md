@@ -16,7 +16,6 @@ Repo for programs, apps. [See the repo](https://github.com/answerquest/answerque
 
 [Playback of GPS data of multiple buses](https://answerquest.github.io/GPSPlayback/)
 
-[Bus Stops and Routes Manager](http://nikhilvj.co.in/busroutes/): A prototype for interlinking of two types of databases to each other inside wordpress platform, and having a possibility for creating a GTFS feed creator.
 
 [Words Replacer](words-replacer.html): Ctrl+H on steroids. Make a range of word/phrase replacements on a text sequentially.
 
@@ -42,3 +41,5 @@ Ubuntu: `for f in *.csv; do cat "$f" >> all.txt; echo "">> all.txt; done`
 [Simple location picker](leaflet-center-location-picker.html) like Ola/Uber where you move the map around and the marker is the map's center.
 
 [Draw](draw.html) : Draw shapes on a map, and then export your work in geojson shapefile format.
+
+[leaflet-painting](http://nikhilvj.co.in/files/leaflet-painting/leaflet-painting.html) : Using leaflet tech to make zoomable maps of large images. Can be used for curating, digital tours of art pieces or any image which is large in size but has intricate details.
