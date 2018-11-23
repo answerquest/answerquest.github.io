@@ -42,6 +42,7 @@
 <script>
 
 function text2kml() {
+// TO DO : FIX A BUG! sample data from Philip created some "undefined" stuff at end.
 
 /*
 input : 18.530663 73.875515 0 0;18.534935 73.874657 0 0;18.534925 73.87626 0 0;18.531995 73.876925 0 0;18.530663 73.875515 0 0
@@ -64,11 +65,17 @@ for (input in inputbox) {
 	var longlatarray = [];
 
 	for (coord in inputarray) {
-		var container = inputarray[coord].split(' ');
+		// data cleaning: zap everything that is not 0-9 (.) (;) or (space). from https://stackoverflow.com/a/4460306/4355695
+		var latlonstring = inputarray[coord].replace(/[^0-9.; ]/g, "").trim();
+		var container = latlonstring.split(' ');
 		console.log(container);
-		var rectified = container[1] + ',' + container[0] + ',' + container[2];
-		//console.log(rectified);
-		longlatarray.push( rectified );
+		if checklatlng(container[0], container[1]) {
+			// check for valid lat-long values, push in only if valid.
+			var rectified = container[1] + ',' + container[0] + ',' + container[2];
+			//console.log(rectified);
+			longlatarray.push( rectified );
+		}
+		
 	}
 
 	outputstring = '<Placemark>\n<name>Shape' + shapecounter + '</name>\n<MultiGeometry><Polygon><outerBoundaryIs><LinearRing>\n<coordinates>' + longlatarray.join(' ') + '</coordinates>\n</LinearRing></outerBoundaryIs></Polygon></MultiGeometry>\n</Placemark>';
@@ -127,6 +134,19 @@ if (vals) vals = vals.substring(1);
 	*/
 }
 
+// brought in from static-gtfs-manager
+function checklatlng(lat,lon) {
+	if ( typeof lat == 'number' && typeof lon == 'number' &&
+		!isNaN(lat) && !isNaN(lon) ) {
+		//console.log(lat,lon,'is valid');
+		// again, check if they're in 90 -90 etc
+		if( (-90<=lat<=90) && (-180<=lon<=180) ) return true;
+	}
+	
+	// no need of else.. if it fails anywhere above, default return should be false
+	//console.log(lat,lon,'is not valid');
+	return false;
+}
 </script>
 </body>
 </html>
