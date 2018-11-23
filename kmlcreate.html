@@ -68,27 +68,33 @@ for (input in inputbox) {
 		// data cleaning: zap everything that is not 0-9 (.) (;) or (space). from https://stackoverflow.com/a/4460306/4355695
 		var latlonstring = inputarray[coord].replace(/[^0-9.; ]/g, "").trim();
 		var container = latlonstring.split(' ');
-		console.log(container);
-		if checklatlng(container[0], container[1]) {
+		//console.log(container);
+		if(checklatlng(container[0], container[1]) ) {
 			// check for valid lat-long values, push in only if valid.
 			var rectified = container[1] + ',' + container[0] + ',' + container[2];
-			//console.log(rectified);
+			console.log(shapecounter,':',rectified);
 			longlatarray.push( rectified );
 		}
 		
 	}
 
-	outputstring = '<Placemark>\n<name>Shape' + shapecounter + '</name>\n<MultiGeometry><Polygon><outerBoundaryIs><LinearRing>\n<coordinates>' + longlatarray.join(' ') + '</coordinates>\n</LinearRing></outerBoundaryIs></Polygon></MultiGeometry>\n</Placemark>';
-	shapecounter++;
+	if(longlatarray.length) {
+		outputstring = '<Placemark>\n<name>Shape' + shapecounter + '</name>\n<MultiGeometry><Polygon><outerBoundaryIs><LinearRing>\n<coordinates>' + longlatarray.join(' ') + '</coordinates>\n</LinearRing></outerBoundaryIs></Polygon></MultiGeometry>\n</Placemark>';
+		shapecounter++;
+		totaloutput.push(outputstring);
+		//console.log('added ',outputstring)
+	}
 
-	totaloutput.push(outputstring);
 }
 
 
 document.getElementById('polygon').value ='<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n' + totaloutput.join('\n') + '\n</Document>\n</kml>';
 
 // afterthought: let's make a linestring KML too, so it's just line and not polygon:
-document.getElementById('line').value = document.getElementById('polygon').value.replace('<Polygon><outerBoundaryIs><LinearRing>','<LineString>').replace('</LinearRing></outerBoundaryIs></Polygon>','</LineString>');
+document.getElementById('line').value = document.getElementById('polygon').value
+	.replace(/<MultiGeometry><Polygon><outerBoundaryIs><LinearRing>/gi,'<LineString><tessellate>1</tessellate>')
+	.replace(/<\/LinearRing><\/outerBoundaryIs><\/Polygon><\/MultiGeometry>/gi,'</LineString>');
+// use replace-all and case-insensitive replace. from https://www.w3schools.com/jsref/jsref_replace.asp . The normal replace only does it once.
 }
 
 function example() {
@@ -136,6 +142,8 @@ if (vals) vals = vals.substring(1);
 
 // brought in from static-gtfs-manager
 function checklatlng(lat,lon) {
+	lat = parseFloat(lat);
+	lon = parseFloat(lon);
 	if ( typeof lat == 'number' && typeof lon == 'number' &&
 		!isNaN(lat) && !isNaN(lon) ) {
 		//console.log(lat,lon,'is valid');
