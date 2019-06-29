@@ -4,20 +4,29 @@
 # answerquest.github.io
 Repo for programs, apps. [See the repo](https://github.com/answerquest/answerquest.github.io).
 
+## Youtube related
 [Youtube video info extractor](youtube-info-extractor.html)
 
 [Youtube: Get all vids of a youtube user, channel or playlist](youtube-all-vids-info.html)
 
+## Utilities for handling data
+[Words Replacer](words-replacer.html): Ctrl+H on steroids. Make a range of word/phrase replacements on a text sequentially.
+
+[Table un-pivot](table-unpivot.html): Convert "wide" or pivoted chart (which is human-friendly) to "narrow" or linear table (which is machine-friendly and workable for visualizations, calculations).
+
+[Offline Form](offline-form.html) : An example of a form in a standalone webpage that saves the submitted data as a local CSV file in your downloads folder. Good for situations where you have to take registrations and have slow or no internet. Works in Google Chrome, Chromium/Iron browser; not in Firefox as of now. Later you can combine the CSV files via commands.<br>
+Windows : `copy *.csv all.txt`<br>
+Ubuntu: `for f in *.csv; do cat "$f" >> all.txt; echo "">> all.txt; done`
+
 [Self-referencing CSV to Hierarchical JSON converter](selfrefCSV_2_hierarchJSON.html) : for visualizing tabular data that has nested hierarhcies with rows having parent-child configurations.
 
+
+## Maps related
 [Synchronized Maps : Pune Prabhags](pune_07-12-17_sync.html) Side-by-side comparison of maps from pre-2012, 2012-17, and 2017-onwards
 
 [Collecting data online on a map-enabled form](form2mapbox-encrypted.html) Using mapbox javascript api without server, map-based form submitting data to a mapbox dataset and displaying data collected so far.
 
 [Playback of GPS data of multiple buses](https://answerquest.github.io/GPSPlayback/)
-
-
-[Words Replacer](words-replacer.html): Ctrl+H on steroids. Make a range of word/phrase replacements on a text sequentially.
 
 [Overlap](overlap.html) : Load image/raster maps like Development Plan, fading in and out over zoomable web map with satellite view and other map views.
 
@@ -32,11 +41,7 @@ Repo for programs, apps. [See the repo](https://github.com/answerquest/answerque
 
 [Overlap-custom side-by-side](overlap-custom-side.html) : When one georeferenced raster layer overlay isn't enough and you need to compare two of them side by side!
 
-[Offline Form](offline-form.html) : An example of a form in a standalone webpage that saves the submitted data as a local CSV file in your downloads folder. Good for situations where you have to take registrations and have slow or no internet. Works in Google Chrome, Chromium/Iron browser; not in Firefox as of now. Later you can combine the CSV files via commands.<br>
-Windows : `copy *.csv all.txt`<br>
-Ubuntu: `for f in *.csv; do cat "$f" >> all.txt; echo "">> all.txt; done`
-
-[Create KML shapes from lat-long strings in ona.io csv](kmlcreate.html)
+[kmlcreate](kmlcreate.html) - Create KML shapefiles from lat-long strings collectd in ODK form data]
 
 [Simple location picker](leaflet-center-location-picker.html) like Ola/Uber where you move the map around and the marker is the map's center.
 
