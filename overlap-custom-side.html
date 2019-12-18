@@ -10,7 +10,8 @@
 	<link rel="stylesheet" href="lib/leaflet-slider.css"/>
 	<script src="lib/leaflet-slider.js"></script>
 	<link rel="stylesheet" href="lib/Control.FullScreen.css" />
-    <script src="lib/leaflet.functionaltilelayer.js"></script>
+	<script src="lib/leaflet.functionaltilelayer.js"></script>
+	<script src="lib/leaflet-providers.js"></script>
 
 <style>
 body {
@@ -63,7 +64,7 @@ body {
 <small><p>Left side: <input type="text" id="leftOverlay" size="40" value="http://mapwarper.net/maps/tile/26003/{z}/{x}/{y}.png"> </p><p>Right side: <input type="text" id="rightOverlay" size="40" value="http://mapwarper.net/maps/tile/25970/{z}/{x}/{y}.png"></p>
 <a href="https://github.com/answerquest/answerquest.github.io/blob/master/overlap-custom-side.html">Source code</a> | <a href="http://datameet.org">Datameet</a>
 <br>
-By <a href="http://nikhilvj.co.in">Nikhil VJ</a> | <a href="https://nikhilvj.benow.in/pay/">i appreciate this!</a>
+By <a href="https://nikhilvj.co.in">Nikhil VJ</a> | <a href="javascript:alert('Loved this? Please help me do more open source work like this!\nTip jar: UPI: 9665831250@upi');">i appreciate this!</a>
 </small>
 </div>
 <div id="left">Left</div>
@@ -74,33 +75,32 @@ By <a href="http://nikhilvj.co.in">Nikhil VJ</a> | <a href="https://nikhilvj.ben
 <script>
 // ************************
 // INITIAL
-const osmLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>',
-	mapboxUrl = 'https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png',
-	MBAttrib = '&copy; ' + osmLink + ' Contributors & <a href="https://www.mapbox.com/about/maps/">Mapbox</a>';
 
-var MBstreets = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mlpl2d', attribution: MBAttrib, maxZoom: 20}),
-	MBsatlabel = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mmaa87', attribution: MBAttrib}),
-	MBsat = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mni8e7', attribution: MBAttrib}),
-	MBlight = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.m0mmobne', attribution: MBAttrib}),
-	MBdark = L.tileLayer(mapboxUrl, {id: 'nikhilsheth.jme9hi44', attribution: MBAttrib}),
-	OsmIndia = L.tileLayer(mapboxUrl, {id: 'openstreetmap.1b68f018', attribution: MBAttrib, maxZoom: 20}),
-	GithubLight = L.tileLayer('http://{s}.tiles.mapbox.com/v3/github.map-xgq2svrz/{z}/{x}/{y}.png', {attribution: MBAttrib}),
-	scenic = L.tileLayer('https://api.mapbox.com/styles/v1/nikhilsheth/cj8rdd7wu45nl2sps9teusbbr/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlraGlsc2hldGgiLCJhIjoiQTREVlJuOCJ9.YpMpVVbkxOFZW-bEq1_LIw', {attribution: MBAttrib}) ; 
-
+// Initiate Leaflet MAP
+// background layers, using Leaflet-providers plugin. See https://github.com/leaflet-extras/leaflet-providers
+var OSM = L.tileLayer.provider('OpenStreetMap.Mapnik');
+var cartoVoyager = L.tileLayer.provider('CartoDB.VoyagerLabelsUnder');
+var cartoPositron = L.tileLayer.provider('CartoDB.Positron');
+var cartoDark = L.tileLayer.provider('CartoDB.DarkMatter');
+var esriWorld = L.tileLayer.provider('Esri.WorldImagery');
+var gStreets = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3']});
+var gHybrid = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3']});
+var gSat = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3']});
 
 var baseLayers = {
-	"OpenStreetMap.IN": OsmIndia,
-	"Mapbox Streets": MBstreets,
-	"Mapbox Satellite w/labels": MBsatlabel ,
-	"Mapbox Light": MBlight,
-	"Github Light" : GithubLight,
-	"Mapbox Dark" : MBdark,
-	"Scenic" : scenic
+	"OpenStreetMap": OSM,
+	"cartoVoyager": cartoVoyager,
+	"cartoPositron": cartoPositron ,
+	"cartoDark": cartoDark,
+	"esriWorld" : esriWorld,
+	"gStreets" : gStreets,
+	"gSat" : gSat,
+	"gHybrid" : gHybrid
 };
 
 // *************************
 
-var map = L.map('map', {layers: [MBsatlabel]}).setView([13.1, 77.594563], 11);
+var map = L.map('map', {layers: [esriWorld]}).setView([13.1, 77.594563], 11);
 
 //var tileLayer = new L.TileLayer('https://api.mapbox.com/styles/v1/nikhilsheth/cj8rdd7wu45nl2sps9teusbbr/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmlraGlsc2hldGgiLCJhIjoiQTREVlJuOCJ9.YpMpVVbkxOFZW-bEq1_LIw').addTo(map);
 
