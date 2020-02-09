@@ -20,6 +20,7 @@
 <table width="100%">
 <tr width="100%">
 <td width="40%">
+Your Youtube API Access Key: <input id="accesskey" type="text" size="50"> | <small><a target="_blank" href="https://developers.google.com/youtube/v3/getting-started" title="What, you thought I'll let you use mine? :)">Click here to get your Access Key</a></small><br>
 <h4>Enter YouTube Video URLs in the text box below,<br>one URL per line</h3>
 
 <textarea id="search-txt" type="text" rows="20" cols="50">
@@ -29,7 +30,8 @@ https://www.youtube.com/watch?v=_w1De4KqshI
 <input id="search-btn" type="button" value="Fetch Video Information"> <small>give it a few secs</small>
 </td><td>
 Output: <br>
-<textarea id="output" rows="25" cols="80"></textarea>
+<textarea id="output" rows="20" cols="80"></textarea>
+<br> For youtube-dl:<br><input id="youtubedl" size="80" value="ytmp4"></>
 <script>
 /*
  * YouTube: Retrieve Title, and other info
@@ -40,6 +42,7 @@ Output: <br>
 //$(function() {
 	$("#search-btn").on("click", function() {
 		document.getElementById('output').value = '';
+		document.getElementById('youtubedl').value = '';
 		var array1 = document.getElementById('search-txt').value.split('\n');
 		for (i=0; i< array1.length; i++) { // for loop cyling through each line of input text
 			var line = array1[i];
@@ -54,7 +57,7 @@ Output: <br>
 				continue;
 			}
 			$.getJSON("https://www.googleapis.com/youtube/v3/videos", {
-				key: "AIzaSyB67EeMDNvqQqPqwVM-Jtqt8Pdpq-R9q4I",
+				key: $('#accesskey').val(),
 				part: "snippet,statistics",
 				id: videoid
 			}, function(data) {
@@ -63,6 +66,8 @@ Output: <br>
 				} else 	{
 				document.getElementById("output").value += "https://www.youtube.com/watch?v=" + data.items[0].id + "\n" + data.items[0].snippet.title + " -" + data.items[0].snippet.channelTitle + ", " + data.items[0].snippet.publishedAt.substr(0,10) + "\n\n" ;
 				}
+
+				document.getElementById("youtubedl").value += " " + 'http://youtu.be/' + data.items[0].id;
 				
 				/*
 				other infos, from original script:
