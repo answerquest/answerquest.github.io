@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Opensteetmap.in Tiles on Leaflet JS</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+<style>
+#map {
+	height: 100vh;
+	width: 100%;
+}
+body {
+	margin: 0px;
+}
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+
+
+<script>
+
+var osmIn = L.tileLayer('https://{s}.tiles.mapbox.com/v4/openstreetmap.1b68f018/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoib3NtLWluIiwiYSI6ImNqcnVxMTNrNTJwbHc0M250anUyOW81MjgifQ.cZnvZEyWT5AzNeO3ajg5tg', {attribution: 'Tiles with proper India boundaries<a href="https://openstreetmap.in/">Openstreetmap.in</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors'});
+
+
+var map = L.map('map', {
+	'center': [27,77],
+	'zoom': 5,
+	'layers': osmIn
+});
+
+
+</script>
+</body>
+</html>
