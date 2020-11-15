@@ -22,6 +22,8 @@ Ubuntu: `for f in *.csv; do cat "$f" >> all.txt; echo "">> all.txt; done`
 
 
 ## Maps related
+[Pune ward map shapefiles](https://github.com/datameet-pune/datameet-pune.github.io/tree/master/maps) Collection of ward maps of Pune old and new
+
 [Synchronized Maps : Pune Prabhags](pune_07-12-17_sync.html) Side-by-side comparison of maps from pre-2012, 2012-17, and 2017-onwards
 
 [Collecting data online on a map-enabled form](form2mapbox-encrypted.html) Using mapbox javascript api without server, map-based form submitting data to a mapbox dataset and displaying data collected so far.
@@ -51,3 +53,10 @@ Ubuntu: `for f in *.csv; do cat "$f" >> all.txt; echo "">> all.txt; done`
 [leaflet-painting](https://server.nikhilvj.co.in/tilemaker/leaflet-painting.html) : Using leaflet tech to make zoomable maps of large images. Can be used for curating, digital tours of art pieces or any image which is large in size but has intricate details. See other images also tiled: [babel](https://server.nikhilvj.co.in/tilemaker/leaflet-painting.html?p=babel), [egnazio](https://server.nikhilvj.co.in/tilemaker/leaflet-painting.html?p=egnazio), [ajantacave](https://server.nikhilvj.co.in/tilemaker/leaflet-painting.html?p=ajantaCave26#3/75.78/-87.10), [amirHamza](https://server.nikhilvj.co.in/tilemaker/leaflet-painting.html?p=amirHamza), [benares](https://server.nikhilvj.co.in/tilemaker/leaflet-painting.html?p=benares), [hydcarpet](https://server.nikhilvj.co.in/tilemaker/leaflet-painting.html?p=hydcarpet#4/82.60/-91.45), [nasaxdf](https://server.nikhilvj.co.in/tilemaker/leaflet-painting.html?p=nasaxdf&z=4#2/63.2/-44.5), [qutub minar](https://server.nikhilvj.co.in/tilemaker/leaflet-painting.html?p=qutub1&z=4), [taj mahal](https://server.nikhilvj.co.in/tilemaker/leaflet-painting.html?p=tajMahal&z=6#1/0/0), [peshwai](https://server.nikhilvj.co.in/tilemaker/leaflet-painting.html?p=templePeshwai&z=5)
 
 [Openstreetmap.in](osm-in.html) : Leaflet map with background map tiles created by folks at openstreetmap.in, having Indian national boundaries as accepted by govt of India
+
+## Pune Budget, related work
+[Self-referencing table to Hierarchical JSON converter](https://files.nikhilvj.co.in/selfrefCSV_2_hierarchJSON.html) A JS tool for converting flat tables to hierarchical JSON. I created and used this to create the data the fed into the visualizations below.
+
+[Pune Budget 2016-17 Expenditures at a Glance](https://files.nikhilvj.co.in/pune-budget-viz-2.html) Interactive Sunburst visualisation of Pune's Budget document, 2016-17
+
+[Pune Budget 2016-17 Expenditures in collapsible tables](https://files.nikhilvj.co.in/pune-budget-viz-4.html) Pune's 2016-17 budget data in tabular form with collapsible levels
