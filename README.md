@@ -44,6 +44,8 @@ Ubuntu: `for f in *.csv; do cat "$f" >> all.txt; echo "">> all.txt; done`
 
 [Overlap-custom side-by-side](overlap-custom-side.html) : Overlay one or two georeferenced raster images layer on top of a web map, zoom and fade in/out. Great for comapring development plans, comparing with present day satellite imagery etc.
 
+[Pune Development Plan overlays](http://ourpuneourbudget.in/know-your-city/overlapping-maps/) : Geo-referenced pdfs of Pune Development Plan maps overlaid over interactive web map
+
 [kmlcreate](kmlcreate.html) - Create KML shapefiles from lat-long strings collectd in ODK form data]
 
 [Simple location picker](leaflet-center-location-picker.html) like Ola/Uber where you move the map around and the marker is the map's center.
