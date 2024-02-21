@@ -27,10 +27,10 @@ var CartoDB_Positron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 });
 
-var CartoDB_DarkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-	subdomains: 'abcd', maxZoom: 21,  maxNativeZoom: 20,
-	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-});
+// var CartoDB_DarkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+// 	subdomains: 'abcd', maxZoom: 21,  maxNativeZoom: 20,
+// 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+// });
 
 // var gStreets = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', { maxZoom: 20, subdomains: ['mt0', 'mt1', 'mt2', 'mt3'] });
 // var gHybrid = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', { maxZoom: 20, subdomains: ['mt0', 'mt1', 'mt2', 'mt3'] });
@@ -38,7 +38,7 @@ var CartoDB_DarkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all
 var baseLayers = {
     "OpenStreetMap.org": OSM,
     "CartoDB Light": CartoDB_Positron,
-    "CartoDB Dark": CartoDB_DarkMatter,
+    // "CartoDB Dark": CartoDB_DarkMatter,
     "ESRI Satellite": esriWorld,
     //  "gStreets": gStreets, 
     // "gHybrid": gHybrid 
@@ -97,14 +97,25 @@ map.on('baselayerchange', function (event) {
 	event.layer.on('load', tiles_loaded);
 });
 
+// from https://github.com/gabriel-russo/Leaflet.BetterFileLayer?tab=readme-ov-file
 var bfl_options = {
-	position: 'topleft', // Leaflet control position
+	position: 'topright', // Leaflet control position
 	fileSizeLimit: 102400, // File size limit in kb (default: 1024 kb)
-	style: () => {}, // Overwrite the default BFL GeoJSON style function
-	onEachFeature: () => {}, // Overwrite the default BFL GeoJSON onEachFeature function
+	style: () => {
+		// console.log('hello');
+		// return {
+        //     color: "black",
+        //     fillOpacity: 0,
+        //     weight: 3,
+        //     opacity: 1
+        // };
+	}, // Overwrite the default BFL GeoJSON style function
+	onEachFeature: () => {
+		console.log('hello');
+	}, // Overwrite the default BFL GeoJSON onEachFeature function
 	layer: shapeLayer, // If you want a custom layer to be used (must be a GeoJSON class inheritance)
 	// Restrict accepted file formats (default: .gpx, .kml, .kmz, .geojson, .json, .csv, .topojson, .wkt, .shp, .shx, .prj, .dbf, .zip)
-	formats:['.geojson', '.kml', '.gpx'],
+	// formats:['.geojson', '.kml', '.gpx'],
 	
 	text: { // If you need translate
 	  title: "Upload a shape by clicking here, or drag-drop a file onto this map", // Plugin Button Text
@@ -168,7 +179,5 @@ document.getElementById("slider3").oninput = function() {
 	else if (map.hasLayer(CartoDB_Positron)) {
 		CartoDB_Positron.setOpacity(this.value/100);
 	}
-	else if (map.hasLayer(CartoDB_DarkMatter)) {
-		CartoDB_DarkMatter.setOpacity(this.value/100);
-	}
+	
 }
