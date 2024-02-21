@@ -4,10 +4,6 @@
 # answerquest.github.io
 Repo for programs, apps. [See the repo](https://github.com/answerquest/answerquest.github.io).
 
-## Youtube related
-[Youtube video info extractor](youtube-info-extractor.html)
-
-[Youtube: Get all vids of a youtube user, channel or playlist](youtube-all-vids-info.html)
 
 ## Utilities for handling data
 [Words Replacer](words-replacer.html): Ctrl+H on steroids. Make a range of word/phrase replacements on a text sequentially.
@@ -22,6 +18,8 @@ Ubuntu: `for f in *.csv; do cat "$f" >> all.txt; echo "">> all.txt; done`
 
 
 ## Maps related
+[Map Printer](print.html) Print large-size maps
+
 [Pune ward map shapefiles](https://github.com/datameet-pune/datameet-pune.github.io/tree/master/maps) Collection of ward maps of Pune old and new
 
 [Synchronized Maps : Pune Prabhags](pune_07-12-17_sync.html) Side-by-side comparison of maps from pre-2012, 2012-17, and 2017-onwards
@@ -62,3 +60,9 @@ Ubuntu: `for f in *.csv; do cat "$f" >> all.txt; echo "">> all.txt; done`
 [Pune Budget 2016-17 Expenditures at a Glance](https://files.nikhilvj.co.in/pune-budget-viz-2.html) Interactive Sunburst visualisation of Pune's Budget document, 2016-17
 
 [Pune Budget 2016-17 Expenditures in collapsible tables](https://files.nikhilvj.co.in/pune-budget-viz-4.html) Pune's 2016-17 budget data in tabular form with collapsible levels
+
+
+## Youtube related
+[Youtube video info extractor](youtube-info-extractor.html)
+
+[Youtube: Get all vids of a youtube user, channel or playlist](youtube-all-vids-info.html)
