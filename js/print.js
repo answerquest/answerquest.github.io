@@ -125,11 +125,16 @@ var bfl_options = {
 L.Control.betterFileLayer(bfl_options).addTo(map);
 
 map.on("bfl:layerloaded", (ev) => {
-	console.log("Your file was read successfully!! Event: ", ev);
+	// console.log("Your file was read successfully!! Event: ", ev);
+	let color = $(`#color`).val();
+	let weight = parseFloat($(`#weight`).val());
 	shapeLayer.eachLayer(r => {
 		r.setStyle({ 
 			opacity: $('#slider2').val()/100,
 			fillOpacity: $('#slider1').val()/100,
+			color: color, 
+			fillColor: color, 
+			weight:weight
 		});
 	});
 });
@@ -209,10 +214,10 @@ function changeDimensions(reset=false, preset=false) {
 }
 
 function changeColor() {
-	var color = $(`#color`).val();
-
+	let color = $(`#color`).val();
+	let weight = parseFloat($(`#weight`).val());
 	shapeLayer.eachLayer(r => {
-		r.setStyle({ color: color, fillColor: color });
+		r.setStyle({ color: color, fillColor: color, weight:weight });
 	});
 
 }

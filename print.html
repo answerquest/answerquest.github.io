@@ -75,13 +75,17 @@ body {
 .preset_select {
     height: 2.5rem;
 }
+
+.narrow50 {
+    width: 50px;
+}
 </style>
 </head>
 <body>
-<div class="container-fluid no-print">
+<div class="container-fluid no-print mt-5">
 <div class="row">
 <div class="col-md-4">
-    <h3>Map Printer</h3>
+    <h1>Map Printer</h1>
     <div class="card card-body mb-4">
     <ul>
         <li>Drag-drop a shape file (preferably .geojson format) onto this map to display its border.</li>
@@ -99,7 +103,7 @@ body {
 </div>
 <div class="col-md-5">
     
-    <h3>Customize the map</h3>
+    <h3>Print page size</h3>
     <p class="mb-2">Change page dimensions: <small>can make it big!</small></p>
     <p class="mb-2">Width:<input class="width narrow90" size="5" value="1000" type="number" min="100" max="100000" step="10"> px, 
         Height:<input class="height narrow90" size="5" value="1450" type="number" min="100" max="100000" step="10"> px
@@ -131,9 +135,10 @@ body {
     </p>
     <p>Page status: <span id="tileStatus"></span></p>
     
-    <p>Change color: <input id="color" value="black" size="8">
-        &nbsp;&nbsp;&nbsp;&nbsp; 
-    <button onclick="changeColor()" class="btn btn-info">Apply</button>
+    <h3>Shape</h3>
+    <p>Color: <input id="color" value="black" size="4">
+    &nbsp;Border size: <input id="weight" value="4" class="narrow50" type="number">
+    &nbsp;<button onclick="changeColor()" class="btn btn-outline-success">Apply</button>
     </p>
 
     <br>
