@@ -9,6 +9,7 @@ var shapeLayer = L.geoJson(null);
 
 const ORIG_W = 1000;
 const ORIG_H = 1450;
+
 // ######################################
 // LEAFLET MAP
 
@@ -144,6 +145,8 @@ function changeDimensions(reset=false, preset=false) {
 	// console.log("chosen preset: " + $('#presets').val(), reset, preset);
 	var w;
 	var h;
+	var pagew = '21cm';
+	var pageh = '29.7cm';
 	if(reset) {
 		// console.log("resetting");
 		$(`.width`).val(ORIG_W);
@@ -166,34 +169,50 @@ function changeDimensions(reset=false, preset=false) {
 			case "A3_300":
 				w = 4960;
 				h = 7016;
+				pagew = '29.7cm';
+				pageh = '42cm';
 				break;
 			case "A3_150":
 				w = 1754;
 				h = 2480;
+				pagew = '29.7cm';
+				pageh = '42cm';
 				break;
 			case "A2_300":
 				w = 4960;
 				h = 7016;
+				pagew = '42cm';
+				pageh = '59.4cm';
 				break;
 			case "A2_150":
 				w = 2480;
 				h = 3508;
+				pagew = '42cm';
+				pageh = '59.4cm';
 				break;
 			case "A1_300":
 				w = 7016;
 				h = 9933;
+				pagew = '59.4cm';
+				pageh = '84.1cm';
 				break;
 			case "A1_150":
 				w = 3508;
 				h = 4967;
+				pagew = '59.4cm';
+				pageh = '84.1cm';
 				break;
 			case "A0_300":
 				w = 9933;
 				h = 14043;
+				pagew = '84.1cm';
+				pageh = '118.9cm';
 				break;
 			case "A0_150":
 				w = 4967;
 				h = 7022;
+				pagew = '84.1cm';
+				pageh = '118.9cm';
 				break;
 		}
 		$(`.width`).val(w);
@@ -205,6 +224,20 @@ function changeDimensions(reset=false, preset=false) {
 	
     $(`.page`).css('width',`${w}px`);
     $(`.page`).css('height',`${h}px`);
+
+	// body cm height and width setting as per preset
+	var cssRules = document.querySelector('style').sheet.cssRules;
+	for (var i = 0; i < cssRules.length; i++) {
+        // Check if the rule is inside the @media print block
+        if (cssRules[i].media && cssRules[i].media.mediaText === 'print') {
+            // Check if the rule targets the body element
+            if (cssRules[i].selectorText === 'body') {
+                // Change the width and height values
+                cssRules[i].style.width = pagew;
+                cssRules[i].style.height = pageh;
+            }
+        }
+    }
 
     map.invalidateSize();
     // from https://stackoverflow.com/questions/24412325/resizing-a-leaflet-map-on-container-resize 
