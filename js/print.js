@@ -67,13 +67,10 @@ L.geoJSON(india_outline, {
 
 $('.leaflet-container').css('cursor', 'crosshair'); // from https://stackoverflow.com/a/28724847/4355695 Changing mouse cursor to crosshairs
 
-L.control.scale({ metric: true, imperial: false }).addTo(map);
-var myRenderer = L.canvas({ padding: 0.5 });
-
 var overlays = {
     "shape": shapeLayer,
 };
-var layerControl = L.control.layers(baseLayers, overlays, { collapsed: true, autoZIndex: false }).addTo(map);
+var layerControl = L.control.layers(baseLayers, overlays, { position: 'topleft' }).addTo(map);
 shapeLayer.addTo(map);
 
 function tiles_loading() {
@@ -100,7 +97,7 @@ map.on('baselayerchange', function (event) {
 
 // from https://github.com/gabriel-russo/Leaflet.BetterFileLayer?tab=readme-ov-file
 var bfl_options = {
-	position: 'topright', // Leaflet control position
+	position: 'topleft', // Leaflet control position
 	fileSizeLimit: 102400, // File size limit in kb (default: 1024 kb)
 	style: () => {
 		// console.log('hello');
@@ -123,6 +120,8 @@ var bfl_options = {
 	},
   }
 L.Control.betterFileLayer(bfl_options).addTo(map);
+
+L.control.scale({ metric: true, imperial: false, position:'topleft' }).addTo(map);
 
 map.on("bfl:layerloaded", (ev) => {
 	// console.log("Your file was read successfully!! Event: ", ev);
