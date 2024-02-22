@@ -7,7 +7,8 @@ const start_zoom = 15;
 const max_zoom = 21;
 var shapeLayer = L.geoJson(null);
 
-
+const ORIG_W = 1000;
+const ORIG_H = 1450;
 // ######################################
 // LEAFLET MAP
 
@@ -124,16 +125,70 @@ var bfl_options = {
 L.Control.betterFileLayer(bfl_options).addTo(map);
 
 // ###############################################33
-function changeDimensions(reset=false) {
-
-	var w = parseInt($(`.width`).val());
-    var h = parseInt($(`.height`).val());
-    if(reset) {
+function changeDimensions(reset=false, preset=false) {
+	console.log("changing dimensions");
+	// console.log("chosen preset: " + $('#presets').val(), reset, preset);
+	var w;
+	var h;
+	if(reset) {
+		console.log("resetting");
+		$(`.width`).val(ORIG_W);
+		$(`.height`).val(ORIG_H);
 		w = ORIG_W;
 		h = ORIG_H;
+	}
+	else if (preset) {
+		switch ($('#presets').val()) {
+			case "":
+				return;
+			case "A4_300":
+				w = 2480;
+				h = 3508;
+				break;
+			case "A4_150":
+				w = 1240;
+				h = 1754;
+				break;
+			case "A3_300":
+				w = 4960;
+				h = 7016;
+				break;
+			case "A3_150":
+				w = 1754;
+				h = 2480;
+				break;
+			case "A2_300":
+				w = 4960;
+				h = 7016;
+				break;
+			case "A2_150":
+				w = 2480;
+				h = 3508;
+				break;
+			case "A1_300":
+				w = 7016;
+				h = 9933;
+				break;
+			case "A1_150":
+				w = 3508;
+				h = 4967;
+				break;
+			case "A0_300":
+				w = 9933;
+				h = 14043;
+				break;
+			case "A0_150":
+				w = 4967;
+				h = 7022;
+				break;
+		}
 		$(`.width`).val(w);
 		$(`.height`).val(h);
+	} else {
+		w = parseInt($(`.width`).val());
+		h = parseInt($(`.height`).val());
 	}
+	
     $(`.page`).css('width',`${w}px`);
     $(`.page`).css('height',`${h}px`);
 
@@ -180,4 +235,15 @@ document.getElementById("slider3").oninput = function() {
 		CartoDB_Positron.setOpacity(this.value/100);
 	}
 	
+}
+
+function flip(){
+	let w = parseInt($(`.width`).val());
+	let h = parseInt($(`.height`).val());
+	let temp = w;
+	w = h;
+	h = temp;
+	$(`.width`).val(w);
+	$(`.height`).val(h);
+	changeDimensions();
 }
