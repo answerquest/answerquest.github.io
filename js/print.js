@@ -209,7 +209,11 @@ function changeDimensions(reset=false, preset=false) {
 }
 
 function changeColor() {
-	var color = $(`.color`).val();
+	var color = $(`#color`).val();
+
+	shapeLayer.eachLayer(r => {
+		r.setStyle({ color: color, fillColor: color });
+	});
 
 }
 

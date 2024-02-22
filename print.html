@@ -130,16 +130,16 @@ body {
     <button onclick="changeDimensions(reset=true)" class="btn btn-outline-danger">Reset</button>
     </p>
     <p>Page status: <span id="tileStatus"></span></p>
-    <!--Presets: <a>A4</a> | <a>A3</a> | <a>A2</a> | <a>A1</a>-->
+    
+    <p>Change color: <input id="color" value="black" size="8">
+        &nbsp;&nbsp;&nbsp;&nbsp; 
+    <button onclick="changeColor()" class="btn btn-info">Apply</button>
+    </p>
 
     <br>
 </div>
 <div class="col-md-3">
     <h3>Transparency</h3>
-    <!-- <p>Change color of all layers: <input class="color" value="black" size="8">  
-    <button onclick="changeColor()">Apply</button>
-    <br>[Under Construction]
-    </p> -->
     Border Opacity: <div class="slidecontainer"><input type="range" min="0" max="100" value="100" class="slider" id="slider2"></div>
     Fill Opacity: <div class="slidecontainer"><input type="range" min="0" max="100" value="0" class="slider" id="slider1"></div>
     Map Opacity: <div class="slidecontainer"><input type="range" min="1" max="100" value="100" class="slider" id="slider3"></div>
