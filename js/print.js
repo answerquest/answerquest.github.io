@@ -111,7 +111,7 @@ var bfl_options = {
         //     opacity: 1
         // };
 	}, // Overwrite the default BFL GeoJSON style function
-	onEachFeature: () => {
+	onEachFeature: (feature, layer) => {
 		console.log('hello');
 	}, // Overwrite the default BFL GeoJSON onEachFeature function
 	layer: shapeLayer, // If you want a custom layer to be used (must be a GeoJSON class inheritance)
@@ -124,14 +124,24 @@ var bfl_options = {
   }
 L.Control.betterFileLayer(bfl_options).addTo(map);
 
+map.on("bfl:layerloaded", (ev) => {
+	console.log("Your file was read successfully!! Event: ", ev);
+	shapeLayer.eachLayer(r => {
+		r.setStyle({ 
+			opacity: $('#slider2').val()/100,
+			fillOpacity: $('#slider1').val()/100,
+		});
+	});
+});
+
 // ###############################################33
 function changeDimensions(reset=false, preset=false) {
-	console.log("changing dimensions");
+	// console.log("changing dimensions");
 	// console.log("chosen preset: " + $('#presets').val(), reset, preset);
 	var w;
 	var h;
 	if(reset) {
-		console.log("resetting");
+		// console.log("resetting");
 		$(`.width`).val(ORIG_W);
 		$(`.height`).val(ORIG_H);
 		w = ORIG_W;
@@ -207,9 +217,6 @@ function zoomFit(){
 	map.fitBounds(shapeLayer.getBounds(), {padding:[5,5], maxZoom:17});
 }
 
-// Range slider, from https://www.w3schools.com/howto/howto_js_rangeslider.asp
-document.getElementById("slider1").value = 60;
-document.getElementById("slider2").value = 60;
 
 document.getElementById("slider1").oninput = function() {
 	shapeLayer.eachLayer(r => {
