@@ -18,8 +18,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script type="application/javascript" src="https://unpkg.com/leaflet-better-filelayer@0.1.1/dist/leaflet.betterfilelayer.min.js" crossorigin="anonymous"></script>
-
-<script src="lib/leaflet-providers.js"></script>
+<script src="lib/leaflet-image.js"></script>
 
 <style>
 body {
@@ -92,12 +91,17 @@ body {
         <li>You can drop multiple files one by one also.</li>
         <li>Use the sliders on right to adjust the shape and map background.</li>
         <li>Press Print button when ready. It'll only include the map block, all these texts will be hidden away.</li>
+        <li>Or, you can use the Save button to download the map as an image.</li>
     </ul>
     </div>
     
-    <p><button onclick="zoomFit()" class="btn btn-warning">Fit map to Layers</button>
-    &nbsp;&nbsp;&nbsp;&nbsp; 
-    <button onclick="window.print()" class="btn btn-primary">Print</button></p>
+    <p><button onclick="zoomFit()" class="btn btn-warning">Fit map to shape</button>
+    &nbsp;&nbsp; 
+    <button onclick="window.print()" class="btn btn-primary">Print</button>
+    &nbsp;&nbsp; 
+    <button onclick="save_image()" class="btn btn-success">Save Image</button>
+    &nbsp;&nbsp;<span id="save_image_status"></span>
+    </p>
     
     
 </div>
@@ -164,6 +168,7 @@ body {
 <p>Disclaimer: This map is NOT made for displaying India's political boundaries, it's made for making large full-size printouts of smaller regions inside India or elsewhere.<br>
 The India boundary shown is obtained from <a href="https://onlinemaps.surveyofindia.gov.in/Home.aspx">Survey of India website</a>, is kept as fixed on this map to show official India boundary as per GOI and overriding other community-edited Openstreetmap data over which we have no control. If you're looking at border regions, kindly focus on India boundary only and don't pay any attention to others. &#x1f64f; </p>
 <p>This page is released open-source under India Geo Spatial Data Guidelines, <a href="https://onlinemaps.surveyofindia.gov.in/GeospatialGuidelines.aspx">click here to know more.</a></p>
+<div id="images"></div>
 </div>
 
 <script src="js/India_Outline_Map.js"></script>
