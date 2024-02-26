@@ -52,7 +52,7 @@ var map = L.map('map', {
     layers: [OSM],
     maxZoom: max_zoom,
 	preferCanvas: true,
-	zoomDelta: 0.1, zoomSnap:0.1
+	// zoomDelta: 0.1, zoomSnap:0.1 // reverted from this fractional zoom setting, with this on, the image saving is bugging out, giving some other area only in background.
 });
 
 // Load India int'l boundary as per shapefile shared on https://surveyofindia.gov.in/pages/outline-maps-of-india
