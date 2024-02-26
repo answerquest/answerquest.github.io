@@ -52,6 +52,7 @@ var map = L.map('map', {
     layers: [OSM],
     maxZoom: max_zoom,
 	preferCanvas: true,
+	zoomDelta: 0.1, zoomSnap:0.1
 });
 
 // Load India int'l boundary as per shapefile shared on https://surveyofindia.gov.in/pages/outline-maps-of-india
