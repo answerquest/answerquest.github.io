@@ -297,29 +297,18 @@ function flip(){
 	changeDimensions();
 }
 
-function save_image() {
-	console.log('hello');
+function save_image(format='png') {
 	$('#save_image_status').html("Generating image..");
 	leafletImage(map, function(err, canvas) {
 		// note: webp format is possible
-		var dataURL = canvas.toDataURL('image/png');
+		var dataURL = canvas.toDataURL(`image/${format}`);
 		var link = document.createElement('a');
-		link.download = 'map.png'; // Set the download filename
+		link.download = `map.${format}`; // Set the download filename
 		link.href = dataURL; // Set the data URL as the link href
 		// Trigger a click event on the link to start the download
 		document.body.appendChild(link);
 		link.click();
 		document.body.removeChild(link);
 		$('#save_image_status').html("Image saved.");
-		// var img = document.createElement('img');
-		// var dimensions = map.getSize();
-		// img.width = dimensions.x;
-		// img.height = dimensions.y;
-		// img.src = canvas.toDataURL();
-		// document.getElementById('images').innerHTML = '';
-		// document.getElementById('images').appendChild(img);
-		// console.log(img.src);
-		// console.log(canvas);
-		// console.log('eh?');
 	});
 }

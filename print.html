@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Map Printer</title>
+<title>Large Map Printer / Exporter</title>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -84,7 +84,7 @@ body {
 <div class="container-fluid no-print mt-5">
 <div class="row">
 <div class="col-md-4">
-    <h1>Map Printer</h1>
+    <h1>Large Map Printer / Exporter</h1>
     <div class="card card-body mb-4">
     <ul>
         <li>Drag-drop a shape file (preferably .geojson format) onto this map to display its border.</li>
@@ -95,12 +95,13 @@ body {
     </ul>
     </div>
     
-    <p><button onclick="zoomFit()" class="btn btn-warning">Fit map to shape</button>
+    <p>
     &nbsp;&nbsp; 
-    <button onclick="window.print()" class="btn btn-primary">Print</button>
-    &nbsp;&nbsp; 
-    <button onclick="save_image()" class="btn btn-success">Save Image</button>
-    &nbsp;&nbsp;<span id="save_image_status"></span>
+    <button onclick="save_image('png')" class="btn btn-outline-success">Save Image as PNG</button>
+    &nbsp;&nbsp;
+    <button onclick="save_image('webp')" class="btn btn-outline-success">Save Image as WEBP</button>
+    &nbsp;&nbsp;
+    <span id="save_image_status"></span>
     </p>
     
     
@@ -142,6 +143,10 @@ body {
     <p><b>Note:</b> The presets and css scripting for it are approximations and best-effort attempts. <br>
     When you go for the print dialogue and choose your page size etc, there will probably be some mis-match.<br>
     Please see the print-preview, then come back here and tweak the width and heigth to get it right. </p>
+
+    <p><button onclick="zoomFit()" class="btn btn-warning">Fit map to shape</button>
+        &nbsp;&nbsp; 
+    <button onclick="window.print()" class="btn btn-primary">Print</button></p>
 </div>
 <div class="col-md-3">
     <h3>Shape</h3>
