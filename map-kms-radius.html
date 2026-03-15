@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <title>Radius Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; }
+    #map { width: 100%; height: 100%; }
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: sans-serif;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ctrl-group label { margin: 0; color: #444; }
+    input[type="text"], input[type="number"] {
+      padding: 4px 6px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #latlng-input { width: 170px; }
+    #latlng-input.error {
+      border-color: red;
+      background: #fff0f0;
+    }
+    #radius-input { width: 70px; }
+    #error-msg {
+      color: red;
+      font-size: 12px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <div class="ctrl-group">
+      <label for="latlng-input">Lat, Lon:</label>
+      <input id="latlng-input" type="text" placeholder="12.9688, 77.5760"/>
+      <span id="error-msg">Invalid lat,lon</span>
+    </div>
+    <div class="ctrl-group">
+      <label for="radius-input">Radius (km):</label>
+      <input id="radius-input" type="number" min="1" value="100"/>
+    </div>
+  </div>
+  <div id="map"></div>
+  <script>
+    var params = new URLSearchParams(window.location.search);
+    var initLat    = parseFloat(params.get('lat'))    || 18.547487;
+    var initLon    = parseFloat(params.get('lon'))    || 73.862801;
+    var initZoom   = parseInt(params.get('zoom'))     || 11;
+    var initRadius = parseFloat(params.get('radius')) || 25;
+
+    document.getElementById('radius-input').value = initRadius;
+
+    var map = L.map('map').setView([initLat, initLon], initZoom);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    var circle = L.circle([initLat, initLon], {
+      radius: initRadius * 1000,
+      color: 'blue',
+      fillColor: 'blue',
+      fillOpacity: 0.1
+    }).addTo(map);
+
+    // -- Helpers --
+
+    function formatLatLng(lat, lon) {
+      return lat.toFixed(6) + ',' + lon.toFixed(6);
+    }
+
+    function updateLatLngField() {
+      var c = map.getCenter();
+      document.getElementById('latlng-input').value = formatLatLng(c.lat, c.lng);
+      document.getElementById('latlng-input').classList.remove('error');
+      document.getElementById('error-msg').style.display = 'none';
+    }
+
+    function updateURL() {
+      var c = map.getCenter();
+      var p = new URLSearchParams({
+        lat:    c.lat.toFixed(6),
+        lon:    c.lng.toFixed(6),
+        zoom:   map.getZoom(),
+        radius: document.getElementById('radius-input').value
+      });
+      history.replaceState(null, '', '?' + p.toString());
+    }
+
+    function redrawCircle() {
+      var c = map.getCenter();
+      var r = parseFloat(document.getElementById('radius-input').value) || 1;
+      circle.setLatLng(c);
+      circle.setRadius(r * 1000);
+    }
+
+    function parseLatLon(raw) {
+      // Strip all spaces, then split on comma
+      var clean = raw.replace(/\s+/g, '');
+      var parts = clean.split(',');
+      if (parts.length !== 2) return null;
+      var lat = parseFloat(parts[0]);
+      var lon = parseFloat(parts[1]);
+      if (isNaN(lat) || isNaN(lon)) return null;
+      if (lat < -90 || lat > 90)   return null;
+      if (lon < -180 || lon > 180) return null;
+      return { lat: lat, lon: lon };
+    }
+
+    // -- Event handlers --
+
+    map.on('moveend', function() {
+      updateLatLngField();
+      redrawCircle();
+      updateURL();
+    });
+
+    map.on('zoomend', updateURL);
+
+    document.getElementById('radius-input').addEventListener('input', function() {
+      redrawCircle();
+      updateURL();
+    });
+
+    document.getElementById('latlng-input').addEventListener('keydown', function(e) {
+      if (e.key !== 'Enter') return;
+      var result = parseLatLon(this.value);
+      if (!result) {
+        this.classList.add('error');
+        document.getElementById('error-msg').style.display = 'inline';
+        return;
+      }
+      this.classList.remove('error');
+      document.getElementById('error-msg').style.display = 'none';
+      map.setView([result.lat, result.lon], map.getZoom());
+    });
+
+    // -- Init --
+    updateLatLngField();
+  </script>
+</body>
+</html>
